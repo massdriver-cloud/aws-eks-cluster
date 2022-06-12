@@ -48,7 +48,7 @@ module "external_dns" {
   source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=c336d59"
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
-  release              = "external-dns-#{each.key}"
+  release              = "external-dns"
   namespace            = local.core_services_namespace
   route53_hosted_zones = local.route53_zone_to_domain_map
 }
@@ -62,4 +62,3 @@ module "cert_manager" {
   namespace            = local.core_services_namespace
   route53_hosted_zones = local.route53_zone_to_domain_map
 }
-
