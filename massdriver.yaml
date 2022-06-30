@@ -19,14 +19,14 @@ params:
       k8s_version: "1.21"
       node_groups:
         - name_suffix: shared
-          instance_type: t3.medium
+          instance_type: T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
           min_size: 1
           max_size: 10
     - __name: Production
       k8s_version: "1.21"
       node_groups:
         - name_suffix: shared
-          instance_type: c5.2xlarge
+          instance_type: C5 High-CPU Double Extra Large (8 vCPUs, 16.0 GiB)
           min_size: 1
           max_size: 10
   required:
@@ -83,33 +83,59 @@ params:
             title: Instance type
             description: Instance type to use in the node group
             type: string
-            enum:
-              - c5.large
-              - c5.xlarge
-              - c5.2xlarge
-              - c5.4xlarge
-              - c5.9xlarge
-              - c5.12xlarge
-              - c5.18xlarge
-              - c5.24xlarge
-              - m5.large
-              - m5.xlarge
-              - m5.2xlarge
-              - m5.4xlarge
-              - m5.8xlarge
-              - m5.12xlarge
-              - m5.16xlarge
-              - m5.24xlarge
-              - t3.nano
-              - t3.micro
-              - t3.small
-              - t3.medium
-              - t3.large
-              - t3.xlarge
-              - t3.2xlarge
-              - p2.xlarge
-              - p2.8xlarge
-              - p2.16xlarge
+            oneOf:
+              - title: C5 High-CPU Large (2 vCPUs, 4.0 GiB)
+                const: c5.large
+              - title: C5 High-CPU Extra Large (4 vCPUs, 8.0 GiB)
+                const: c5.xlarge
+              - title: C5 High-CPU Double Extra Large (8 vCPUs, 16.0 GiB)
+                const: c5.2xlarge
+              - title: C5 High-CPU Quadruple Extra Large (16 vCPUs, 32.0 GiB)
+                const: c5.4xlarge
+              - title: C5 High-CPU 9xlarge (36 vCPUs, 72.0 GiB)
+                const: c5.9xlarge
+              - title: C5 High-CPU 12xlarge (48 vCPUs, 96.0 GiB)
+                const: c5.12xlarge
+              - title: C5 High-CPU 18xlarge (72 vCPUs, 144.0 GiB)
+                const: c5.18xlarge
+              - title: C5 High-CPU 24xlarge (96 vCPUs, 192.0 GiB)
+                const: c5.24xlarge
+              - title: M5 General Purpose Large (2 vCPUs, 8.0 GiB)
+                const: m5.large
+              - title: M5 General Purpose Extra Large (4 vCPUs, 16.0 GiB)
+                const: m5.xlarge
+              - title: M5 General Purpose Double Extra Large (8 vCPUs, 32.0 GiB)
+                const: m5.2xlarge
+              - title: M5 General Purpose Quadruple Extra Large (16 vCPUs, 64.0 GiB)
+                const: m5.4xlarge
+              - title: M5 General Purpose Eight Extra Large (32 vCPUs, 128.0 GiB)
+                const: m5.8xlarge
+              - title: M5 General Purpose 12xlarge (48 vCPUs, 192.0 GiB)
+                const: m5.12xlarge
+              - title: M5 General Purpose 16xlarge (64 vCPUs, 256.0 GiB)
+                const: m5.16xlarge
+              - title: M5 General Purpose 24xlarge (96 vCPUs, 384.0 GiB)
+                const: m5.24xlarge
+              - title: T3 Nano (2 vCPUs for a 1h 12m burst, 0.5 GiB)
+                const: t3.nano
+              - title: T3 Micro (2 vCPUs for a 2h 24m burst, 1.0 GiB)
+                const: t3.micro
+              - title: T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
+                const: t3.small
+              - title: T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
+                const: t3.medium
+              - title: T3 Large (2 vCPUs for a 7h 12m burst, 8.0 GiB)
+                const: t3.large
+              - title: T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
+                const: t3.xlarge
+              - title: T3 Double Extra Large (8 vCPUs for a 9h 36m burst, 32.0 GiB)
+                const: t3.2xlarge
+              - title: P2 General Purpose GPU Extra Large (4 vCPUs, 61.0 GiB)
+                const: p2.xlarge
+              - title: P2 General Purpose GPU Eight Extra Large (32 vCPUs, 488.0 GiB)
+                const: p2.8xlarge
+              - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
+                const: p2.16xlarge
           md_set_id:
             type: string
     core_services:
