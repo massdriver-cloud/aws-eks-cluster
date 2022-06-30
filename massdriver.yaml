@@ -19,7 +19,7 @@ params:
       k8s_version: "1.21"
       node_groups:
         - name_suffix: shared
-          instance_type: T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
+          instance_type: t3.medium
           min_size: 1
           max_size: 10
     - __name: Production
