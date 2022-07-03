@@ -1,10 +1,3 @@
-
-data "aws_caller_identity" "current" {}
-
-data "aws_eks_cluster_auth" "this" {
-  name = aws_eks_cluster.cluster.name
-}
-
 locals {
   public_subnet_ids  = [for subnet in var.vpc.data.infrastructure.public_subnets : element(split("/", subnet["arn"]), 1)]
   private_subnet_ids = [for subnet in var.vpc.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
@@ -20,6 +13,11 @@ resource "aws_eks_cluster" "cluster" {
 
   vpc_config {
     subnet_ids = local.subnet_ids
+  }
+
+  kubernetes_network_config {
+    service_ipv4_cidr = "172.20.0.0/16"
+    ip_family = "ipv4"
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
