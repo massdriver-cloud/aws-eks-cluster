@@ -17,7 +17,7 @@ resource "aws_eks_cluster" "cluster" {
 
   kubernetes_network_config {
     service_ipv4_cidr = "172.20.0.0/16"
-    ip_family = "ipv4"
+    ip_family         = "ipv4"
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -29,7 +29,7 @@ resource "aws_eks_cluster" "cluster" {
 }
 
 resource "aws_eks_node_group" "node_group" {
-  for_each        = { for ng in var.node_groups : ng.md_set_id => ng }
+  for_each        = { for ng in var.node_groups : ng.name_suffix => ng }
   node_group_name = "${local.cluster_name}-${each.value.name_suffix}"
   cluster_name    = local.cluster_name
   version         = var.k8s_version
