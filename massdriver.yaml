@@ -57,7 +57,6 @@ params:
           - instance_type
           - min_size
           - max_size
-          - md_set_id
         properties:
           name_suffix:
             type: string
