@@ -131,8 +131,6 @@ params:
                 const: p2.8xlarge
               - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
                 const: p2.16xlarge
-          md_set_id:
-            type: string
     core_services:
       type: object
       title: Core Services
@@ -186,8 +184,6 @@ ui:
         - min_size
         - max_size
         - "*"
-      md_set_id:
-        ui:widget: hidden
   core_services:
     items:
       ui:order:
