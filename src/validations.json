@@ -1,6 +1,5 @@
 {
     "do_not_delete": [
-        "aws_eks_cluster.cluster",
-        "aws_eks_node_group.*"
+        "aws_eks_cluster.cluster"
     ]
 }
