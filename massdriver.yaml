@@ -172,6 +172,7 @@ params:
               title: Enable OpenSearch
               description: Enabling this will create an OpenSearch cluster in the cluster
               default: false
+            # TODO conditionally make persistence size required if enable is true
             persistence_size:
               type: string
               title: Persistence Size GiB
