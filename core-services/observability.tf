@@ -23,7 +23,7 @@ module "opensearch" {
   source      = "github.com/massdriver-cloud/terraform-modules//k8s-opensearch?ref=opensearch"
   md_metadata = var.md_metadata
   release     = "opensearch"
-  namespace   = "md-observability"
+  namespace   = "md-observability" # TODO should this be monitoring?
   helm_additional_values = {
     persistence = {
         size = var.opensearch_persistence_size
