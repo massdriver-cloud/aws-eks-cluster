@@ -18,17 +18,20 @@ module "kube-state-metrics" {
 }
 
 module "opensearch" {
-  count       = true ? 1 : 0
+  count       = var.core_services.observability.opensearch.enable ? 1 : 0
   #TODO replace ref with a SHA once k8s-opensearch is merged
   source      = "github.com/massdriver-cloud/terraform-modules//k8s-opensearch?ref=opensearch"
   md_metadata = var.md_metadata
   release     = "opensearch"
   namespace   = "md-observability" # TODO should this be monitoring?
+  kubernetes_cluster =  local.kubernetes_cluster_artifact
   helm_additional_values = {
     persistence = {
-        size = var.opensearch_persistence_size
+        size = var.core_services.observability.opensearch.persistence_size
     }
-    // TODO configure an index state management policy to delete old things https://opensearch.org/docs/latest/im-plugin/ism/index/
-    // these can be configured with a pre-start lifecycle hook https://github.com/opensearch-project/helm-charts/blob/main/charts/opensearch/values.yaml#L373-L391
   } 
+  // this adds a retention policy to move indexes to warm after 1 day and delete them after a user configurable number of days
+  ism_policies = {
+    "hot-warm-delete": templatefile("${path.module}/opensearch/ism_hot_warm_delete.json", {"log_retention_days": var.core_services.observability.opensearch.log_retention_days})
+  }
 }
