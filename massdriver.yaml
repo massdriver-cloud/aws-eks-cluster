@@ -152,6 +152,35 @@ params:
             pattern: ^Z[A-Z0-9]{9,29}$
             message:
               pattern: Must be a valid Route53 Hosted Zone ID
+    observability:
+      type: object
+      title: Observability
+      description: Configure observability services in Kubernetes for Massdriver to manage
+      required:
+        - opensearch
+      properties:
+        opensearch: 
+          title: OpenSearch
+          description: Configure OpenSearch for observability, allowing you to search logs and metrics
+
+          type: object
+          required:
+          - enable
+          properties:
+            enable:
+              type: boolean
+              title: Enable OpenSearch
+              description: Enabling this will create an OpenSearch cluster in the cluster
+              default: false
+            persistence_size:
+              type: string
+              title: Persistence Size GiB
+              description: Size of the persistent volume to use for OpenSearch
+              minimum: 2
+              maximum: 1000
+              default: 10
+            # TODO add a number of days for retention policy?
+
 
 connections:
   required:
@@ -189,3 +218,8 @@ ui:
       ui:order:
         - enable_ingress
         - route53_hosted_zones
+  observability:
+    opensearch:
+      persistence_size:
+        ui:field: conversionFieldData
+        default: Gibabytes

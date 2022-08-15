@@ -16,3 +16,19 @@ module "kube-state-metrics" {
   release     = "kube-state-metrics"
   namespace   = "md-observability"
 }
+
+module "opensearch" {
+  count       = true ? 1 : 0
+  #TODO replace ref with a SHA once k8s-opensearch is merged
+  source      = "github.com/massdriver-cloud/terraform-modules//k8s-opensearch?ref=opensearch"
+  md_metadata = var.md_metadata
+  release     = "opensearch"
+  namespace   = "md-observability"
+  helm_additional_values = {
+    persistence = {
+        size = var.opensearch_persistence_size
+    }
+    // TODO configure an index state management policy to delete old things https://opensearch.org/docs/latest/im-plugin/ism/index/
+    // these can be configured with a pre-start lifecycle hook https://github.com/opensearch-project/helm-charts/blob/main/charts/opensearch/values.yaml#L373-L391
+  } 
+}
