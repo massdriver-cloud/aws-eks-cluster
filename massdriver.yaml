@@ -155,7 +155,7 @@ params:
       observability:
         type: object
         title: Observability
-        description: Configure observability services in Kubernetes for Massdriver to manage
+        description: Configure logging and metrics collection and delivery for your entire cluster
         required:
           - opensearch
         properties:
