@@ -1,10 +1,10 @@
 {
-  "variable": {
-    "aws_authentication": {
-      "type": "any"
-    },
-    "vpc": {
-      "type": "any"
+    "variable": {
+        "aws_authentication": {
+            "type": "any"
+        },
+        "vpc": {
+            "type": "any"
+        }
     }
-  }
 }

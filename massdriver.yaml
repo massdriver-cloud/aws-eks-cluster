@@ -185,7 +185,10 @@ ui:
         - max_size
         - "*"
   core_services:
-    items:
-      ui:order:
-        - enable_ingress
-        - route53_hosted_zones
+    ui:order:
+      - enable_ingress
+      - route53_hosted_zones
+    route53_hosted_zones:
+      items:
+        ui:field: dnsZonesDropdown
+        cloud: aws
