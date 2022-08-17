@@ -148,11 +148,8 @@ params:
           description: List any Route53 Hosted Zone IDs associated with this cluster to allow the Kubernetes to automatically manage DNS records and SSL certificates
           default: []
           items:
-            type: string
-            # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830
-            # pattern: ^Z[A-Z0-9]{9,29}$
-            # message:
-            #   pattern: Must be a valid Route53 Hosted Zone ID
+            # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830 which isnt _quite a standard ARN.
+            $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
 
 connections:
   required:
