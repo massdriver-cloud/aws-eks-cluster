@@ -145,9 +145,11 @@ params:
         route53_hosted_zones:
           type: array
           title: Route53 Hosted Zones
-          description: List any Route53 Hosted Zone IDs associated with this cluster to allow the Kubernetes to automatically manage DNS records and SSL certificates
+          description: Route53 Hosted Zones to associate with this cluster. Enables Kubernetes to automatically manage DNS records and SSL certificates. Hosted Zones can be configured at https://app.massdriver.cloud/dns-zones.
           default: []
           items:
+            title: "Route53 Hosted Zone"
+            description: ""
             # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830 which isnt _quite a standard ARN.
             $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
 
