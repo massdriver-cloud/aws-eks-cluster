@@ -149,9 +149,10 @@ params:
           default: []
           items:
             type: string
-            pattern: ^Z[A-Z0-9]{9,29}$
-            message:
-              pattern: Must be a valid Route53 Hosted Zone ID
+            # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830
+            # pattern: ^Z[A-Z0-9]{9,29}$
+            # message:
+            #   pattern: Must be a valid Route53 Hosted Zone ID
 
 connections:
   required:

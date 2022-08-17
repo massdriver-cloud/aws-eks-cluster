@@ -1,13 +1,17 @@
 locals {
-  enable_cert_manager = length(var.core_services.route53_hosted_zones) > 0
+  route53_hosted_zone_ids = [
+    for hosted_zone_arn in var.core_services.route53_hosted_zones :
+    element(split("/", hosted_zone_arn), 1)
+  ]
+  enable_cert_manager = length(local.route53_hosted_zone_ids) > 0
   route53_zone_to_domain_map = {
-    for zone in var.core_services.route53_hosted_zones :
+    for zone in local.route53_hosted_zone_ids :
     zone => data.aws_route53_zone.hosted_zones[zone].name
   }
 }
 
 data "aws_route53_zone" "hosted_zones" {
-  for_each = toset(var.core_services.route53_hosted_zones)
+  for_each = toset(local.route53_hosted_zone_ids)
   zone_id  = each.key
 }
 
