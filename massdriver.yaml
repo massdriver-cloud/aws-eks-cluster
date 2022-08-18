@@ -56,8 +56,10 @@ params:
                     properties:
                       opensearch:
                         title: OpenSearch
+                        required:
+                          - persistence_size
+                          - retention_days
                         properties:
-                          # TODO conditionally make persistence size required if enable is true
                           persistence_size:
                             type: integer
                             title: Persistence Size GiB
