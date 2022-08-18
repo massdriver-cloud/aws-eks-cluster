@@ -33,6 +33,45 @@ params:
     - k8s_version
     - node_groups
     - core_services
+  allOf:
+    - if:
+        properties:
+          core_services:
+            properties:
+              observability:
+                properties:
+                  logging:
+                    properties:
+                      destination:
+                        const: "OpenSearch (in cluster)"
+      then:
+        properties:
+          core_services:
+            properties:
+              observability:
+                properties:
+                  logging:
+                    required:
+                      - opensearch
+                    properties:
+                      opensearch:
+                        title: OpenSearch
+                        properties:
+                          # TODO conditionally make persistence size required if enable is true
+                          persistence_size:
+                            type: integer
+                            title: Persistence Size GiB
+                            description: Size of the persistent volume to use for OpenSearch
+                            minimum: 2
+                            maximum: 1000
+                            default: 10
+                          retention_days:
+                            type: integer
+                            title: Retention Days
+                            description: Number of days to retain logs and metrics in an OpenSearch Index
+                            minimum: 1
+                            maximum: 365
+                            default: 7
   properties:
     k8s_version:
       type: string
@@ -174,24 +213,6 @@ params:
                   enum:
                   - "OpenSearch (in cluster)"
                   - "Disabled"
-                opensearch:
-                  title: OpenSearch
-                  properties:
-                    # TODO conditionally make persistence size required if enable is true
-                    persistence_size:
-                      type: integer
-                      title: Persistence Size GiB
-                      description: Size of the persistent volume to use for OpenSearch
-                      minimum: 2
-                      maximum: 1000
-                      default: 10
-                    retention_days:
-                      type: integer
-                      title: Retention Days
-                      description: Number of days to retain logs and metrics in an OpenSearch Index
-                      minimum: 1
-                      maximum: 365
-                      default: 7
 
 
 connections:
@@ -229,6 +250,7 @@ ui:
     ui:order:
       - enable_ingress
       - route53_hosted_zones
+      - observability
     route53_hosted_zones:
       items:
         ui:field: dnsZonesDropdown
