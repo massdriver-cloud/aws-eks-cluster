@@ -52,15 +52,17 @@ params:
               type: string
               title: Destination
               description: Where to send logs
-              enum:
-              - "OpenSearch (in cluster)"
-              - "Disabled"
+              oneOf:
+              - title: "OpenSearch (in cluster)"
+                const: "opensearch"
+              - title: "Disabled"
+                const: "disabled"
           dependencies:
             destination:
               oneOf:
                 - properties:
                     destination:
-                      const: "OpenSearch (in cluster)"
+                      const: "opensearch"
                     opensearch:
                       type: object
                       title: OpenSearch
