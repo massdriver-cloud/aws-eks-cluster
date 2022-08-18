@@ -33,48 +33,66 @@ params:
     - k8s_version
     - node_groups
     - core_services
-  allOf:
-    - if:
-        properties:
-          core_services:
-            properties:
-              observability:
-                properties:
-                  logging:
-                    properties:
-                      destination:
-                        const: "OpenSearch (in cluster)"
-      then:
-        properties:
-          core_services:
-            properties:
-              observability:
-                properties:
-                  logging:
-                    required:
-                      - opensearch
-                    properties:
-                      opensearch:
-                        title: OpenSearch
-                        required:
-                          - persistence_size
-                          - retention_days
-                        properties:
-                          persistence_size:
-                            type: integer
-                            title: Persistence Size GiB
-                            description: Size of the persistent volume to use for OpenSearch
-                            minimum: 2
-                            maximum: 1000
-                            default: 10
-                          retention_days:
-                            type: integer
-                            title: Retention Days
-                            description: Number of days to retain logs and metrics in an OpenSearch Index
-                            minimum: 1
-                            maximum: 365
-                            default: 7
   properties:
+    observability:
+      type: object
+      title: Observability
+      description: Configure logging and metrics collection and delivery for your entire cluster
+      required:
+        -  logging
+      properties:
+        logging:
+          type: object
+          title: Logging
+          description: Configure logging for your cluster
+          required:
+            - destination 
+          properties:
+            destination:
+              type: string
+              title: Destination
+              description: Where to send logs
+              enum:
+              - "OpenSearch (in cluster)"
+              - "Disabled"
+          dependencies:
+            destination:
+              oneOf:
+                - properties:
+                    destination:
+                      const: "OpenSearch (in cluster)"
+                    opensearch:
+                      type: object
+                      title: OpenSearch
+                      required:
+                        - persistence_size
+                        - retention_days
+                        - enable_dashboards
+                      properties:
+                        persistence_size:
+                          type: integer
+                          title: Persistence Size GiB
+                          description: Size of the persistent volume to use for OpenSearch
+                          minimum: 2
+                          maximum: 1000
+                          default: 10
+                        retention_days:
+                          type: integer
+                          title: Retention Days
+                          description: Number of days to retain logs and metrics in an OpenSearch Index
+                          minimum: 1
+                          maximum: 365
+                          default: 7
+                        enable_dashboards:
+                          type: boolean
+                          title: Enable Dashboards
+                          description: Enable OpenSearch Dashboards
+                          default: true
+                  required:
+                    - opensearch
+                - properties:
+                    destination:
+                      const: "Disabled"
     k8s_version:
       type: string
       title: Kubernetes Version
@@ -193,28 +211,6 @@ params:
             description: ""
             # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830 which isnt _quite a standard ARN.
             $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
-        observability:
-          type: object
-          title: Observability
-          description: Configure logging and metrics collection and delivery for your entire cluster
-          required:
-            -  logging
-          properties:
-            logging:
-              type: object
-              title: Logging
-              description: Configure logging for your cluster
-              required:
-                - destination 
-                - opensearch # TODO removeme when if / else working
-              properties:
-                destination:
-                  type: string
-                  title: Destination
-                  description: Where to send logs
-                  enum:
-                  - "OpenSearch (in cluster)"
-                  - "Disabled"
 
 
 connections:
