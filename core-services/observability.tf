@@ -18,7 +18,7 @@ module "kube-state-metrics" {
 }
 
 module "opensearch" {
-  count       = var.core_services.observability.logging.destination == "OpenSearch (in cluster)" || var.core_services.observability.logging.opensearch.enable ? 1 : 0
+  count       = var.core_services.observability.logging.destination == "OpenSearch (in cluster)" ? 1 : 0
   # TODO replace ref with a SHA once k8s-opensearch is merged
   source      = "github.com/massdriver-cloud/terraform-modules//k8s-opensearch?ref=opensearch"
   md_metadata = var.md_metadata
