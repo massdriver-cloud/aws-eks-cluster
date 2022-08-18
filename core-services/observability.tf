@@ -32,6 +32,6 @@ module "opensearch" {
   } 
   // this adds a retention policy to move indexes to warm after 1 day and delete them after a user configurable number of days
   ism_policies = {
-    "hot-warm-delete": templatefile("${path.module}/logging/opensearch/ism_hot_warm_delete.json", {"log_retention_days": var.core_services.observability.logging.opensearch.log_retention_days})
+    "hot-warm-delete": templatefile("${path.module}/logging/opensearch/ism_hot_warm_delete.json.tftpl", {"log_retention_days": var.core_services.observability.logging.opensearch.log_retention_days})
   }
 }
