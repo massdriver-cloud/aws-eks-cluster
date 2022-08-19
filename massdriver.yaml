@@ -237,6 +237,7 @@ ui:
     - k8s_version
     - node_groups
     - core_services
+    - observability
     - "*"
   node_groups:
     items:
@@ -250,13 +251,12 @@ ui:
     ui:order:
       - enable_ingress
       - route53_hosted_zones
-      - observability
     route53_hosted_zones:
       items:
         ui:field: dnsZonesDropdown
         cloud: aws
-    observability:
-      opensearch:
-        persistence_size:
-          ui:field: conversionFieldData
-          default: Gibabytes
+  observability:
+    opensearch:
+      persistence_size:
+        ui:field: conversionFieldData
+        default: Gibabytes
