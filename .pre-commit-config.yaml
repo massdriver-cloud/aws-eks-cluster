@@ -50,7 +50,7 @@ repos:
       - id: no-commit-to-branch
         args: [-b, main]
   - repo: https://github.com/jaketf/jsonschema2md
-    rev: v0.0.1
+    rev: v0.5.0
     hooks:
       - id: jsonschema2md
         name: jsonschema2md params
