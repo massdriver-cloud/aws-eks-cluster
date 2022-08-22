@@ -64,25 +64,341 @@ Security and compliance scanning of our bundles is performed using [Bridgecrew](
 ### Params
 
 <!-- PARAMS:START -->
+# JSON Schema
 
-**Params coming soon**
+*An open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.*
+
+## Properties
+
+- **`core_services`** *(object)*: Configure core services in Kubernetes for Massdriver to manage. Cannot contain additional properties.
+  - **`enable_ingress`** *(boolean)*: Enabling this will create an nginx ingress controller in the cluster, allowing internet traffic to flow into web accessible services within the cluster. Default: `False`.
+  - **`route53_hosted_zones`** *(array)*: Route53 Hosted Zones to associate with this cluster. Enables Kubernetes to automatically manage DNS records and SSL certificates. Hosted Zones can be configured at https://app.massdriver.cloud/dns-zones. Default: `[]`.
+    - **Items** *(string)*: .
+
+      Examples:
+      ```json
+      "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+      ```
+
+      ```json
+      "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+      ```
+
+- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.19', '1.20', '1.21', '1.22']`.
+- **`node_groups`** *(array)*
+  - **Items** *(object)*: Definition of a node group. Cannot contain additional properties.
+    - **`instance_type`** *(string)*: Instance type to use in the node group.
+      - **One of**
+        - C5 High-CPU Large (2 vCPUs, 4.0 GiB)
+        - C5 High-CPU Extra Large (4 vCPUs, 8.0 GiB)
+        - C5 High-CPU Double Extra Large (8 vCPUs, 16.0 GiB)
+        - C5 High-CPU Quadruple Extra Large (16 vCPUs, 32.0 GiB)
+        - C5 High-CPU 9xlarge (36 vCPUs, 72.0 GiB)
+        - C5 High-CPU 12xlarge (48 vCPUs, 96.0 GiB)
+        - C5 High-CPU 18xlarge (72 vCPUs, 144.0 GiB)
+        - C5 High-CPU 24xlarge (96 vCPUs, 192.0 GiB)
+        - M5 General Purpose Large (2 vCPUs, 8.0 GiB)
+        - M5 General Purpose Extra Large (4 vCPUs, 16.0 GiB)
+        - M5 General Purpose Double Extra Large (8 vCPUs, 32.0 GiB)
+        - M5 General Purpose Quadruple Extra Large (16 vCPUs, 64.0 GiB)
+        - M5 General Purpose Eight Extra Large (32 vCPUs, 128.0 GiB)
+        - M5 General Purpose 12xlarge (48 vCPUs, 192.0 GiB)
+        - M5 General Purpose 16xlarge (64 vCPUs, 256.0 GiB)
+        - M5 General Purpose 24xlarge (96 vCPUs, 384.0 GiB)
+        - T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
+        - T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
+        - T3 Large (2 vCPUs for a 7h 12m burst, 8.0 GiB)
+        - T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
+        - T3 Double Extra Large (8 vCPUs for a 9h 36m burst, 32.0 GiB)
+        - P2 General Purpose GPU Extra Large (4 vCPUs, 61.0 GiB)
+        - P2 General Purpose GPU Eight Extra Large (32 vCPUs, 488.0 GiB)
+        - P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
+    - **`max_size`** *(integer)*: Maximum number of instances in the node group. Minimum: `0`. Default: `10`.
+    - **`min_size`** *(integer)*: Minimum number of instances in the node group. Minimum: `0`. Default: `1`.
+    - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
+## Examples
+
+  ```json
+  {
+      "__name": "Development",
+      "k8s_version": "1.21",
+      "node_groups": [
+          {
+              "instance_type": "t3.medium",
+              "max_size": 10,
+              "min_size": 1,
+              "name_suffix": "shared"
+          }
+      ]
+  }
+  ```
+
+  ```json
+  {
+      "__name": "Production",
+      "k8s_version": "1.21",
+      "node_groups": [
+          {
+              "instance_type": "c5.2xlarge",
+              "max_size": 10,
+              "min_size": 1,
+              "name_suffix": "shared"
+          }
+      ]
+  }
+  ```
 
 <!-- PARAMS:END -->
 
 ### Connections
 
 <!-- CONNECTIONS:START -->
+# JSON Schema
 
-**Connections coming soon**
+*An open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.*
 
+## Properties
+
+- **`aws_authentication`** *(object)*: . Cannot contain additional properties.
+  - **`data`** *(object)*: Cannot contain additional properties.
+    - **`arn`** *(string)*: Amazon Resource Name.
+
+      Examples:
+      ```json
+      "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+      ```
+
+      ```json
+      "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+      ```
+
+    - **`external_id`** *(string)*: An external ID is a piece of data that can be passed to the AssumeRole API of the Security Token Service (STS). You can then use the external ID in the condition element in a role's trust policy, allowing the role to be assumed only when a certain value is present in the external ID.
+  - **`specs`** *(object)*: Cannot contain additional properties.
+    - **`aws`** *(object)*: . Cannot contain additional properties.
+      - **`region`** *(string)*: AWS Region to provision in.
+
+        Examples:
+        ```json
+        "us-west-2"
+        ```
+
+      - **`resource`** *(string)*
+      - **`service`** *(string)*
+      - **`zone`** *(string)*: AWS Availability Zone.
+
+        Examples:
+- **`vpc`** *(object)*: . Cannot contain additional properties.
+  - **`data`** *(object)*: Cannot contain additional properties.
+    - **`infrastructure`** *(object)*: Cannot contain additional properties.
+      - **`arn`** *(string)*: Amazon Resource Name.
+
+        Examples:
+        ```json
+        "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+        ```
+
+        ```json
+        "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+        ```
+
+      - **`cidr`** *(string)*
+
+        Examples:
+        ```json
+        "10.100.0.0/16"
+        ```
+
+        ```json
+        "192.24.12.0/22"
+        ```
+
+      - **`internal_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet. Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+      - **`private_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet. Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+      - **`public_subnets`** *(array)*
+        - **Items** *(object)*: AWS VCP Subnet. Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`aws_zone`** *(string)*: AWS Availability Zone.
+
+            Examples:
+          - **`cidr`** *(string)*
+
+            Examples:
+            ```json
+            "10.100.0.0/16"
+            ```
+
+            ```json
+            "192.24.12.0/22"
+            ```
+
+
+          Examples:
+  - **`specs`** *(object)*: Cannot contain additional properties.
+    - **`aws`** *(object)*: . Cannot contain additional properties.
+      - **`region`** *(string)*: AWS Region to provision in.
+
+        Examples:
+        ```json
+        "us-west-2"
+        ```
+
+      - **`resource`** *(string)*
+      - **`service`** *(string)*
+      - **`zone`** *(string)*: AWS Availability Zone.
+
+        Examples:
 <!-- CONNECTIONS:END -->
 
 ### Artifacts
 
 <!-- ARTIFACTS:START -->
+# JSON Schema
 
-**Artifacts coming soon**
+*An open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.*
 
+## Properties
+
+- **`kubernetes_cluster`** *(object)*: Kubernetes cluster authentication and cloud-specific configuration. Cannot contain additional properties.
+  - **`data`** *(object)*: Cannot contain additional properties.
+    - **`authentication`** *(object)*: Cannot contain additional properties.
+      - **`cluster`** *(object)*: Cannot contain additional properties.
+        - **`certificate-authority-data`** *(string)*
+        - **`server`** *(string)*
+      - **`user`** *(object)*: Cannot contain additional properties.
+        - **`token`** *(string)*
+    - **`infrastructure`** *(object)*: Cloud specific Kubernetes configuration data. Can contain additional properties.
+      - **One of**
+        - AWS EKS infrastructure config*object*: . Cannot contain additional properties.
+          - **`arn`** *(string)*: Amazon Resource Name.
+
+            Examples:
+            ```json
+            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+            ```
+
+            ```json
+            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+            ```
+
+          - **`oidc_issuer_url`** *(string)*: An HTTPS endpoint URL.
+
+            Examples:
+            ```json
+            "https://example.com/some/path"
+            ```
+
+            ```json
+            "https://massdriver.cloud"
+            ```
+
+        - Azure Infrastructure Resource ID*object*: Minimal Azure Infrastructure Config. Cannot contain additional properties.
+          - **`ari`** *(string)*: Azure Resource ID.
+
+            Examples:
+            ```json
+            "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
+            ```
+
+        - GCP Infrastructure GRN*object*: Minimal GCP Infrastructure Config. Cannot contain additional properties.
+          - **`grn`** *(string)*: GCP Resource Name (GRN).
+
+            Examples:
+            ```json
+            "projects/my-project/global/networks/my-global-network"
+            ```
+
+            ```json
+            "projects/my-project/regions/us-west2/subnetworks/my-subnetwork"
+            ```
+
+            ```json
+            "projects/my-project/topics/my-pubsub-topic"
+            ```
+
+            ```json
+            "projects/my-project/subscriptions/my-pubsub-subscription"
+            ```
+
+            ```json
+            "projects/my-project/locations/us-west2/instances/my-redis-instance"
+            ```
+
+            ```json
+            "projects/my-project/locations/us-west2/clusters/my-gke-cluster"
+            ```
+
+  - **`specs`** *(object)*: Cannot contain additional properties.
+    - **`kubernetes`** *(object)*: Kubernetes distribution and version specifications. Cannot contain additional properties.
+      - **`cloud`** *(string)*: Must be one of: `['aws', 'gcp', 'azure']`.
+      - **`distribution`** *(string)*: Must be one of: `['eks', 'gke', 'aks']`.
+      - **`platform_version`** *(string)*
+      - **`version`** *(string)*
 <!-- ARTIFACTS:END -->
 
 <!-- CONTRIBUTING:START -->

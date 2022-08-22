@@ -33,13 +33,13 @@ repos:
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.71.0 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+    rev: v1.74.1 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
       # - id: terraform_docs
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.3.0
     hooks:
       - id: trailing-whitespace
       - id: check-merge-conflict
@@ -49,3 +49,18 @@ repos:
       - id: detect-aws-credentials
       - id: no-commit-to-branch
         args: [-b, main]
+  - repo: https://github.com/jaketf/jsonschema2md
+    rev: v0.0.1
+    hooks:
+      - id: jsonschema2md
+        name: jsonschema2md params
+        args: [./schema-params.json, ./README.md, --token=PARAMS]
+        pass_filenames: false
+      - id: jsonschema2md
+        name: jsonschema2md connections
+        args: [./schema-connections.json, ./README.md, --token=CONNECTIONS]
+        pass_filenames: false
+      - id: jsonschema2md
+        name: jsonschema2md artifacts
+        args: [./schema-artifacts.json, ./README.md, --token=ARTIFACTS]
+        pass_filenames: false
