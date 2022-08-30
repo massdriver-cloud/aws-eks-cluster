@@ -253,7 +253,6 @@ ui:
   observability:
     # TODO hiding observability until fluentbit is talking to opensearch making it usable
     ui:widget: "hidden"
-    ui:readonly: true
     logging:
       opensearch:
         persistence_size:
