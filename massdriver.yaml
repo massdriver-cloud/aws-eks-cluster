@@ -89,7 +89,7 @@ params:
                     - opensearch
                 - properties:
                     destination:
-                      const: "Disabled"
+                      const: "disabled"
     k8s_version:
       type: string
       title: Kubernetes Version
