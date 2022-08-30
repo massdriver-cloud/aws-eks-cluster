@@ -18,20 +18,26 @@ module "kube-state-metrics" {
 }
 
 module "opensearch" {
-  count              = var.observability.logging.destination == "opensearch" ? 1 : 0
+  #   count              = var.observability.logging.destination == "opensearch" ? 1 : 0
+  # Temporary workaround for having to comment out obervability param in massdriver.yaml
+  count              = 0
   source             = "github.com/massdriver-cloud/terraform-modules//k8s-opensearch?ref=2400d29"
   md_metadata        = var.md_metadata
   release            = "opensearch"
-  namespace          = "md-observability" # TODO should this be monitoring?
+  namespace          = "md-observability"
   kubernetes_cluster = local.kubernetes_cluster_artifact
   helm_additional_values = {
     persistence = {
-      size = var.observability.logging.opensearch.persistence_size
+      # Temporary workaround for having to comment out obervability param in massdriver.yaml
+      #   size = var.observability.logging.opensearch.persistence_size
+      size = "8Gi"
     }
   }
   enable_dashboards = true
   // this adds a retention policy to move indexes to warm after 1 day and delete them after a user configurable number of days
   ism_policies = {
-    "hot-warm-delete" : templatefile("${path.module}/logging/opensearch/ism_hot_warm_delete.json.tftpl", { "log_retention_days" : var.observability.logging.opensearch.retention_days })
+    # Temporary workaround for having to comment out obervability param in massdriver.yaml
+    # "hot-warm-delete" : templatefile("${path.module}/logging/opensearch/ism_hot_warm_delete.json.tftpl", { "log_retention_days" : var.observability.logging.opensearch.retention_days })
+    "hot-warm-delete" : templatefile("${path.module}/logging/opensearch/ism_hot_warm_delete.json.tftpl", { "log_retention_days" : 7 })
   }
 }
