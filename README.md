@@ -97,7 +97,7 @@ Form input parameters for configuring a bundle for deployment.
     - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
 - **`observability`** *(object)*: Configure logging and metrics collection and delivery for your entire cluster.
   - **`logging`** *(object)*: Configure logging for your cluster.
-    - **`destination`** *(string)*: Where to send logs.
+    - **`destination`** *(string)*: Where to send logs. Default: `disabled`.
       - **One of**
         - OpenSearch (in cluster)
         - Disabled

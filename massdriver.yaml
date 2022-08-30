@@ -46,12 +46,13 @@ params:
           title: Logging
           description: Configure logging for your cluster
           required:
-            - destination 
+            - destination
           properties:
             destination:
               type: string
               title: Destination
               description: Where to send logs
+              default: "disabled"
               oneOf:
               - title: "OpenSearch (in cluster)"
                 const: "opensearch"
@@ -250,7 +251,11 @@ ui:
         ui:field: dnsZonesDropdown
         cloud: aws
   observability:
-    opensearch:
-      persistence_size:
-        ui:field: conversionFieldData
+    # TODO hiding observability until fluentbit is talking to opensearch making it usable
+    ui:widget: "hidden"
+    ui:readonly: true
+    logging:
+      opensearch:
+        persistence_size:
+          ui:field: conversionFieldData
         default: Gibabytes
