@@ -49,7 +49,7 @@ module "ingress_nginx" {
 
 module "external_dns" {
   count                = local.enable_external_dns ? 1 : 0
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=c336d59"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=64b906f"
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "external-dns"
