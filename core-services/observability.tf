@@ -31,7 +31,7 @@ module "opensearch" {
   kubernetes_cluster = local.kubernetes_cluster_artifact
   helm_additional_values = {
     persistence = {
-      size = var.observability.logging.opensearch.persistence_size
+      size = "${var.observability.logging.opensearch.persistence_size}Gi"
     }
   }
   enable_dashboards = true
