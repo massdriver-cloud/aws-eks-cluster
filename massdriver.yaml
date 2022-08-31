@@ -72,12 +72,10 @@ params:
                         - retention_days
                       properties:
                         persistence_size:
-                          type: integer
+                          type: string
                           title: Persistence Size GiB
                           description: Size of the persistent volume to use for OpenSearch
-                          minimum: 2
-                          maximum: 1000
-                          default: 10
+                          default: "10"
                         retention_days:
                           type: integer
                           title: Retention Days
