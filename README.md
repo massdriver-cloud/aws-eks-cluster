@@ -95,6 +95,12 @@ Form input parameters for configuring a bundle for deployment.
     - **`max_size`** *(integer)*: Maximum number of instances in the node group. Minimum: `0`. Default: `10`.
     - **`min_size`** *(integer)*: Minimum number of instances in the node group. Minimum: `0`. Default: `1`.
     - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
+- **`observability`** *(object)*: Configure logging and metrics collection and delivery for your entire cluster.
+  - **`logging`** *(object)*: Configure logging for your cluster.
+    - **`destination`** *(string)*: Where to send logs. Default: `disabled`.
+      - **One of**
+        - OpenSearch (in cluster)
+        - Disabled
 ## Examples
 
   ```json
