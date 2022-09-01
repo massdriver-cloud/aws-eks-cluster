@@ -72,10 +72,12 @@ params:
                         - retention_days
                       properties:
                         persistence_size:
-                          type: string
+                          type: integer
                           title: Persistence Size GiB
                           description: Size of the persistent volume to use for OpenSearch
-                          default: "10"
+                          minimum: 1
+                          maximum: 10000
+                          default: 10
                         retention_days:
                           type: integer
                           title: Retention Days
@@ -248,9 +250,3 @@ ui:
       items:
         ui:field: dnsZonesDropdown
         cloud: aws
-  observability:
-    logging:
-      opensearch:
-        persistence_size:
-          ui:field: conversionFieldData
-          default: Gibabytes
