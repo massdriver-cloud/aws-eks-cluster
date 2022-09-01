@@ -50,6 +50,7 @@ module "fluentbit" {
   kubernetes_cluster = local.kubernetes_cluster_artifact
   helm_additional_values = {
     config = {
+      filters = file("${path.module}/logging/fluentbit/filter.conf")
       outputs = templatefile("${path.module}/logging/fluentbit/opensearch_output.conf.tftpl", {
         namespace = local.o11y_namespace
       })
