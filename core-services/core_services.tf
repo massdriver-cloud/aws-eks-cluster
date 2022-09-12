@@ -10,6 +10,8 @@ locals {
     zone => data.aws_route53_zone.hosted_zones[zone].name
   }
   core_services_namespace = "md-core-services"
+
+  storage_class_to_efs_arn_map = { for elem in var.core_services.storage_class_to_efs_map : elem.storage_class_name => elem.efs_arn }
 }
 
 data "aws_route53_zone" "hosted_zones" {
@@ -65,4 +67,15 @@ module "cert_manager" {
   release              = "cert-manager"
   namespace            = local.core_services_namespace
   route53_hosted_zones = local.route53_zone_to_domain_map
+}
+
+module "efs_csi" {
+  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=07ec639"
+  count                        = var.core_services.enable_efs_csi ? 1 : 0
+  name_prefix                  = var.md_metadata.name_prefix
+  eks_cluster_arn              = data.aws_eks_cluster.cluster.arn
+  eks_oidc_issuer_url          = local.oidc_issuer_url
+  release                      = "efs-csi"
+  namespace                    = local.core_services_namespace
+  storage_class_to_efs_arn_map = local.storage_class_to_efs_arn_map
 }

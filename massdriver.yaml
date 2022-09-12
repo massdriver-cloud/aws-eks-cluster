@@ -208,6 +208,40 @@ params:
             description: ""
             # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830 which isnt _quite a standard ARN.
             $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
+        enable_efs_csi:
+          type: boolean
+          title: Enable EFS Volume Support
+          description: Enabling this will install the AWS EFS storage controller into your cluster, allowing you to provision persistent volumes backed by EFS file systems.
+          default: false
+      dependencies:
+        enable_efs_csi:
+          oneOf:
+            - properties:
+                enable_efs_csi:
+                  const: false
+            - properties:
+                enable_efs_csi:
+                  const: true
+                storage_class_to_efs_map:
+                  type: array
+                  title: Storage Classes
+                  description: You may optionally specify a storage class name for each EFS file system you would like to use for persistent volumes. In addition, by specifying any EFS volumes here you will limit the provisioner to only be able to create peristent volumes use the listed EFS file systems. By leaving this blank, all file systems are usable.
+                  default: []
+                  items:
+                    type: object
+                    title: Storage Class to EFS File System map
+                    required:
+                      - storage_class_name
+                      - efs_arn
+                    properties:
+                      storage_class_name:
+                        type: string
+                        title: Storage Class Name
+                        description: Unique name for storage class resource for the EFS file system the EKS cluster
+                      efs_arn:
+                        type: string
+                        title: EFS File System ARN
+                        description: ARN of the EFS file system to map to this storage class in the EKS cluster
 
 
 connections:
@@ -246,7 +280,15 @@ ui:
     ui:order:
       - enable_ingress
       - route53_hosted_zones
+      - enable_efs_csi
+      - storage_class_to_efs_map
+      - "*"
     route53_hosted_zones:
       items:
         ui:field: dnsZonesDropdown
         cloud: aws
+    storage_class_to_efs_map:
+      items:
+        ui:order:
+          - storage_class_name
+          - efs_arn

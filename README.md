@@ -50,6 +50,7 @@ Form input parameters for configuring a bundle for deployment.
 ## Properties
 
 - **`core_services`** *(object)*: Configure core services in Kubernetes for Massdriver to manage.
+  - **`enable_efs_csi`** *(boolean)*: Enabling this will install the AWS EFS storage controller into your cluster, allowing you to provision persistent volumes backed by EFS file systems. Default: `False`.
   - **`enable_ingress`** *(boolean)*: Enabling this will create an nginx ingress controller in the cluster, allowing internet traffic to flow into web accessible services within the cluster. Default: `False`.
   - **`route53_hosted_zones`** *(array)*: Route53 Hosted Zones to associate with this cluster. Enables Kubernetes to automatically manage DNS records and SSL certificates. Hosted Zones can be configured at https://app.massdriver.cloud/dns-zones. Default: `[]`.
     - **Items** *(string)*: .
