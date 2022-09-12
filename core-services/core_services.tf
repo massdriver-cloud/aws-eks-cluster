@@ -70,7 +70,7 @@ module "cert_manager" {
 }
 
 module "efs_csi" {
-  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=07ec639"
+  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=1bb39ea"
   count                        = var.core_services.enable_efs_csi ? 1 : 0
   name_prefix                  = var.md_metadata.name_prefix
   eks_cluster_arn              = data.aws_eks_cluster.cluster.arn
