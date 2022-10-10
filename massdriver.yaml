@@ -39,7 +39,8 @@ params:
       title: Observability
       description: Configure logging and metrics collection and delivery for your entire cluster
       required:
-        -  logging
+        - logging
+        - metrics
       properties:
         logging:
           type: object
@@ -87,6 +88,55 @@ params:
                           default: 7
                   required:
                     - opensearch
+                - properties:
+                    destination:
+                      const: "disabled"
+        metrics:
+          type: object
+          title: Metrics
+          description: Configure metrics for your cluster
+          required:
+            - destination
+          properties:
+            destination:
+              type: string
+              title: Destination
+              description: Where to aggregate metrics
+              default: "disabled"
+              oneOf:
+              - title: "Prometheus (in cluster)"
+                const: "prometheus"
+              - title: "Disabled"
+                const: "disabled"
+          dependencies:
+            destination:
+              oneOf:
+                - properties:
+                    destination:
+                      const: "prometheus"
+                    prometheus:
+                      type: object
+                      title: Prometheus
+                      required:
+                        - persistence_size
+                        - retention_days
+                      properties:
+                        persistence_size:
+                          type: integer
+                          title: Persistence Size GiB
+                          description: Size of the persistent volume to use for Prometheus
+                          minimum: 1
+                          maximum: 10000
+                          default: 10
+                        retention_days:
+                          type: integer
+                          title: Retention Days
+                          description: Number of days to retain metrics in Prometheus
+                          minimum: 1
+                          maximum: 365
+                          default: 7
+                  required:
+                    - prometheus
                 - properties:
                     destination:
                       const: "disabled"
