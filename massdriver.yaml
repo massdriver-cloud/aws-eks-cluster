@@ -114,6 +114,7 @@ params:
           - instance_type
           - min_size
           - max_size
+          - scratch_disk_size_gb
         properties:
           name_suffix:
             type: string
@@ -188,6 +189,12 @@ params:
                 const: p2.8xlarge
               - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
                 const: p2.16xlarge
+          scratch_disk_size_gb:
+            type: integer
+            title: Disk Size
+            description: Disk size for scratch volume.
+            default: 10
+            minimum: 10
     core_services:
       type: object
       title: Core Services
@@ -280,7 +287,11 @@ ui:
         - instance_type
         - min_size
         - max_size
+        - scratch_disk_size_gb
         - "*"
+      scratch_disk_size_gb:
+        ui:field: conversionFieldData
+        unit: GiB
   core_services:
     ui:order:
       - enable_ingress

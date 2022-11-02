@@ -36,6 +36,7 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = local.private_subnet_ids
   node_role_arn   = aws_iam_role.node.arn
   instance_types  = [each.value.instance_type]
+  disk_size       = each.value.scratch_disk_size_gb
 
   scaling_config {
     desired_size = each.value.min_size
