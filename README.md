@@ -64,7 +64,7 @@ Form input parameters for configuring a bundle for deployment.
       "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
       ```
 
-- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.19', '1.20', '1.21', '1.22']`.
+- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.19', '1.20', '1.21', '1.22', '1.23']`.
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
     - **`instance_type`** *(string)*: Instance type to use in the node group.
@@ -171,11 +171,6 @@ Connections from other bundles that this bundle depends on.
         "us-west-2"
         ```
 
-      - **`resource`** *(string)*
-      - **`service`** *(string)*
-      - **`zone`** *(string)*: AWS Availability Zone.
-
-        Examples:
 - **`vpc`** *(object)*: . Cannot contain additional properties.
   - **`data`** *(object)*
     - **`infrastructure`** *(object)*
@@ -297,11 +292,6 @@ Connections from other bundles that this bundle depends on.
         "us-west-2"
         ```
 
-      - **`resource`** *(string)*
-      - **`service`** *(string)*
-      - **`zone`** *(string)*: AWS Availability Zone.
-
-        Examples:
 <!-- CONNECTIONS:END -->
 
 </details>
