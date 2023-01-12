@@ -34,7 +34,7 @@ module "ingress_nginx" {
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
   release            = "ingress-nginx"
-  namespace          = local.core_services_namespace
+  namespace          = module.core_services_service_account.namespace
   helm_additional_values = {
     controller = {
       service = {
@@ -55,7 +55,7 @@ module "external_dns" {
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "external-dns"
-  namespace            = local.core_services_namespace
+  namespace          = module.core_services_service_account.namespace
   route53_hosted_zones = local.route53_zone_to_domain_map
 }
 
@@ -65,7 +65,7 @@ module "cert_manager" {
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "cert-manager"
-  namespace            = local.core_services_namespace
+  namespace          = module.core_services_service_account.namespace
   route53_hosted_zones = local.route53_zone_to_domain_map
 }
 
@@ -76,6 +76,6 @@ module "efs_csi" {
   eks_cluster_arn              = data.aws_eks_cluster.cluster.arn
   eks_oidc_issuer_url          = local.oidc_issuer_url
   release                      = "efs-csi"
-  namespace                    = local.core_services_namespace
+  namespace          = module.core_services_service_account.namespace
   storage_class_to_efs_arn_map = local.storage_class_to_efs_arn_map
 }
