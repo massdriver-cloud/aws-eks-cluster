@@ -16,14 +16,14 @@ steps:
 params:
   examples:
     - __name: Development
-      k8s_version: "1.21"
+      k8s_version: "1.24"
       node_groups:
         - name_suffix: shared
           instance_type: t3.medium
           min_size: 1
           max_size: 10
     - __name: Production
-      k8s_version: "1.21"
+      k8s_version: "1.24"
       node_groups:
         - name_suffix: shared
           instance_type: c5.2xlarge
@@ -34,72 +34,15 @@ params:
     - node_groups
     - core_services
   properties:
-    observability:
-      type: object
-      title: Observability
-      description: Configure logging and metrics collection and delivery for your entire cluster
-      required:
-        -  logging
-      properties:
-        logging:
-          type: object
-          title: Logging
-          description: Configure logging for your cluster
-          required:
-            - destination
-          properties:
-            destination:
-              type: string
-              title: Destination
-              description: Where to send logs
-              default: "disabled"
-              oneOf:
-              - title: "OpenSearch (in cluster)"
-                const: "opensearch"
-              - title: "Disabled"
-                const: "disabled"
-          dependencies:
-            destination:
-              oneOf:
-                - properties:
-                    destination:
-                      const: "opensearch"
-                    opensearch:
-                      type: object
-                      title: OpenSearch
-                      required:
-                        - persistence_size
-                        - retention_days
-                      properties:
-                        persistence_size:
-                          type: integer
-                          title: Persistence Size GiB
-                          description: Size of the persistent volume to use for OpenSearch
-                          minimum: 1
-                          maximum: 10000
-                          default: 10
-                        retention_days:
-                          type: integer
-                          title: Retention Days
-                          description: Number of days to retain logs and metrics in an OpenSearch Index
-                          minimum: 1
-                          maximum: 365
-                          default: 7
-                  required:
-                    - opensearch
-                - properties:
-                    destination:
-                      const: "disabled"
     k8s_version:
       type: string
       title: Kubernetes Version
       description: The version of Kubernetes to run
       enum:
-        - "1.19"
-        - "1.20"
         - "1.21"
         - "1.22"
         - "1.23"
+        - "1.24"
     node_groups:
       type: array
       title: Node Groups
@@ -271,7 +214,6 @@ ui:
     - k8s_version
     - node_groups
     - core_services
-    - observability
     - "*"
   node_groups:
     items:

@@ -64,7 +64,7 @@ Form input parameters for configuring a bundle for deployment.
       "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
       ```
 
-- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.19', '1.20', '1.21', '1.22', '1.23']`.
+- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.21', '1.22', '1.23', '1.24']`.
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
     - **`instance_type`** *(string)*: Instance type to use in the node group.
@@ -96,18 +96,12 @@ Form input parameters for configuring a bundle for deployment.
     - **`max_size`** *(integer)*: Maximum number of instances in the node group. Minimum: `0`. Default: `10`.
     - **`min_size`** *(integer)*: Minimum number of instances in the node group. Minimum: `0`. Default: `1`.
     - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
-- **`observability`** *(object)*: Configure logging and metrics collection and delivery for your entire cluster.
-  - **`logging`** *(object)*: Configure logging for your cluster.
-    - **`destination`** *(string)*: Where to send logs. Default: `disabled`.
-      - **One of**
-        - OpenSearch (in cluster)
-        - Disabled
 ## Examples
 
   ```json
   {
       "__name": "Development",
-      "k8s_version": "1.21",
+      "k8s_version": "1.24",
       "node_groups": [
           {
               "instance_type": "t3.medium",
@@ -122,7 +116,7 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
-      "k8s_version": "1.21",
+      "k8s_version": "1.24",
       "node_groups": [
           {
               "instance_type": "c5.2xlarge",
