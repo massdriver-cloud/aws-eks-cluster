@@ -9,7 +9,7 @@ locals {
     }
     // We need to set the "user" here, but the token won't be generated til the next step
     user = {
-      token = lookup(kubernetes_secret_v1.massdriver-cloud-provisioner_token.data, "token")
+      token = lookup(data.kubernetes_secret_v1.massdriver-cloud-provisioner_token.data, "token")
     }
   }
   data_infrastructure = {
