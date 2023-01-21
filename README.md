@@ -67,6 +67,7 @@ Form input parameters for configuring a bundle for deployment.
 - **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.21', '1.22', '1.23', '1.24']`.
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
+    - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
     - **`instance_type`** *(string)*: Instance type to use in the node group.
       - **One of**
         - C5 High-CPU Large (2 vCPUs, 4.0 GiB)

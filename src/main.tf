@@ -43,6 +43,15 @@ resource "aws_eks_node_group" "node_group" {
     min_size     = each.value.min_size
   }
 
+  dynamic "taint" {
+    for_each = each.value.advanced_configuration_enabled ? [each.value.advanced_configuration.taint] : []
+    content {
+      key    = each.value.taint_key
+      value  = each.value.taint_value
+      effect = each.value.effect
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
     // desired_size issue: https://github.com/aws/containers-roadmap/issues/1637

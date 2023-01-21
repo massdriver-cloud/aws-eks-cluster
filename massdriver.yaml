@@ -131,6 +131,26 @@ params:
                 const: p2.8xlarge
               - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
                 const: p2.16xlarge
+          advanced_configuration_enabled:
+            type: boolean
+            title: Advanced Configuration Enabled
+            default: false
+        dependencies:
+          advanced_configuration_enabled:
+            oneOf:
+              - properties:
+                  advanced_configuration_enabled:
+                    const: false
+              - properties:
+                  advanced_configuration_enabled:
+                    const: true
+                  advanced_configuration:
+                    type: object
+                    title: Advanced Configuration
+                    properties:
+                      taint:
+                        $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/k8s-node-taint.json
+                        $md.immutable: true
     core_services:
       type: object
       title: Core Services
