@@ -2,7 +2,7 @@ schema: draft-07
 name: aws-eks-cluster
 description: Elastic Kubernetes Service is an open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 source_url: github.com/massdriver-cloud/aws-eks-cluster
-access: private
+access: public
 type: infrastructure
 
 steps:
