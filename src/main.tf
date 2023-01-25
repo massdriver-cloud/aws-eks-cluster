@@ -60,6 +60,8 @@ resource "aws_eks_node_group" "node_group" {
     ]
   }
 
+  tags = var.md_metadata.default_tags
+
   depends_on = [
     aws_eks_cluster.cluster
   ]
