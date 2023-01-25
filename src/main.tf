@@ -46,9 +46,9 @@ resource "aws_eks_node_group" "node_group" {
   dynamic "taint" {
     for_each = each.value.advanced_configuration_enabled ? [each.value.advanced_configuration.taint] : []
     content {
-      key    = each.value.taint_key
-      value  = each.value.taint_value
-      effect = each.value.effect
+      key    = taint.value.taint_key
+      value  = taint.value.taint_value
+      effect = taint.value.effect
     }
   }
 
