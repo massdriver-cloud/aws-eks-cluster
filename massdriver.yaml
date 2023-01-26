@@ -151,6 +151,7 @@ params:
                     properties:
                       taint:
                         $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/k8s-node-taint.json
+                        description: "Warning: if you only have one node pool, and it has a taint, other core workloads may not be able to be scheduled and provisioning will fail. If you want to taint a node group, it's recommended that you have another, non-tainted pool for these workloads."
                         $md.immutable: true
     core_services:
       type: object
