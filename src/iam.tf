@@ -25,6 +25,7 @@ resource "aws_iam_policy" "cluster_encryption" {
         Action = [
           "kms:Encrypt",
           "kms:Decrypt",
+          "kms:CreateGrant",
           "kms:ListGrants",
           "kms:DescribeKey",
         ]
