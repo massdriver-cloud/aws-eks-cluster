@@ -23,11 +23,13 @@ resource "aws_iam_policy" "cluster_encryption" {
     Statement = [
       {
         Action = [
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:CreateGrant",
-          "kms:ListGrants",
-          "kms:DescribeKey",
+          "kms:Create*",
+          "kms:Decrypt*",
+          "kms:Describe*",
+          "kms:Encrypt*",
+          "kms:Generate*",
+          "kms:List*",
+          "kms:ReEncrypt*",
         ]
         Effect   = "Allow"
         Resource = module.kms.key_arn
