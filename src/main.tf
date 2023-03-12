@@ -11,6 +11,15 @@ resource "aws_eks_cluster" "cluster" {
   role_arn = aws_iam_role.cluster.arn
   version  = var.k8s_version
 
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  encryption_config {
+    provider {
+      key_arn = module.kms.key_arn
+    }
+    resources = ["secrets"]
+  }
+
   vpc_config {
     subnet_ids = local.subnet_ids
   }
@@ -25,6 +34,7 @@ resource "aws_eks_cluster" "cluster" {
   depends_on = [
     aws_iam_role_policy_attachment.cluster-eks,
     aws_iam_role_policy_attachment.cluster-vpc,
+    aws_cloudwatch_log_group.control_plane
   ]
 }
 
@@ -44,7 +54,7 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   dynamic "taint" {
-    for_each = each.value.advanced_configuration_enabled ? [each.value.advanced_configuration.taint] : []
+    for_each = lookup(each.value, "advanced_configuration_enabled", false) ? [each.value.advanced_configuration.taint] : []
     content {
       key    = taint.value.taint_key
       value  = taint.value.taint_value
