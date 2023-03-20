@@ -132,6 +132,17 @@ params:
                 const: p2.8xlarge
               - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
                 const: p2.16xlarge
+              - title: A1 General Purpose ARM Medium (1 vCPUs, 2.0 GiB)
+                const: a1.medium
+              - title: A1 General Purpose ARM Large (2 vCPUs, 4.0 GiB)
+                const: a1.large
+              - title: A1 General Purpose ARM Extra Large (4 vCPUs, 8.0 GiB)
+                const: a1.xlarge
+              - title: A1 General Purpose ARM Double Extra Large (8 vCPUs, 16.0 GiB)
+                const: a1.2xlarge
+              - title: A1 General Purpose ARM Quadruple Extra Large (16 vCPUs, 32.0 GiB)
+                const: a1.4xlarge
+
           advanced_configuration_enabled:
             type: boolean
             title: Advanced Configuration Enabled
