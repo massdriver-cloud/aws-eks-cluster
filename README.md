@@ -108,6 +108,27 @@ Form input parameters for configuring a bundle for deployment.
 
   ```json
   {
+      "__name": "Wizard",
+      "core_services": {
+          "enable_efs_csi": false,
+          "enable_ingress": true,
+          "route53_hosted_zones": []
+      },
+      "k8s_version": "1.24",
+      "node_groups": [
+          {
+              "advanced_configuration_enabled": false,
+              "instance_type": "t3.medium",
+              "max_size": 10,
+              "min_size": 1,
+              "name_suffix": "shared"
+          }
+      ]
+  }
+  ```
+
+  ```json
+  {
       "__name": "Development",
       "k8s_version": "1.24",
       "node_groups": [

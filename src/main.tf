@@ -47,6 +47,11 @@ resource "aws_eks_node_group" "node_group" {
   node_role_arn   = aws_iam_role.node.arn
   instance_types  = [each.value.instance_type]
 
+  launch_template {
+    id      = aws_launch_template.nodes[each.key].id
+    version = "$Latest"
+  }
+
   scaling_config {
     desired_size = each.value.min_size
     max_size     = each.value.max_size
@@ -70,11 +75,31 @@ resource "aws_eks_node_group" "node_group" {
     ]
   }
 
-  # adding tags will cause a provisioning error!
-  # don't add tags here
-  # tags = var.md_metadata.default_tags
-
   depends_on = [
     aws_eks_cluster.cluster
   ]
+}
+
+resource "aws_launch_template" "nodes" {
+  for_each = { for ng in var.node_groups : ng.name_suffix => ng }
+  name     = "${local.cluster_name}-${each.value.name_suffix}"
+
+  update_default_version = true
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+    // The node IAM role only has permissions for ECR, Networking and EKS. There shouldn't be any
+    // reason for pods to need access to the instance role (pods should use IRSA), hence a hop limit of 1
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  dynamic "tag_specifications" {
+    for_each = ["instance", "volume", "elastic-gpu", "network-interface", "spot-instances-request"]
+    content {
+      resource_type = tag_specifications.value
+      tags          = merge(var.md_metadata.default_tags, { "Name" : "${local.cluster_name}-${each.value.name_suffix}" })
+    }
+  }
 }
