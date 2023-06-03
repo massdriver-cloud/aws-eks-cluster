@@ -16,7 +16,7 @@ steps:
 params:
   examples:
     - __name: Wizard
-      k8s_version: "1.24"
+      k8s_version: "1.27"
       node_groups:
         - name_suffix: shared
           instance_type: t3.medium
@@ -24,18 +24,18 @@ params:
           max_size: 10
           advanced_configuration_enabled: false
       core_services:
-        enable_ingress: true 
+        enable_ingress: true
         route53_hosted_zones: []
         enable_efs_csi: false
     - __name: Development
-      k8s_version: "1.24"
+      k8s_version: "1.27"
       node_groups:
         - name_suffix: shared
           instance_type: t3.medium
           min_size: 1
           max_size: 10
     - __name: Production
-      k8s_version: "1.24"
+      k8s_version: "1.27"
       node_groups:
         - name_suffix: shared
           instance_type: c5.2xlarge
@@ -50,11 +50,14 @@ params:
       type: string
       title: Kubernetes Version
       description: The version of Kubernetes to run
+      default: "1.27"
       enum:
-        - "1.21"
         - "1.22"
         - "1.23"
         - "1.24"
+        - "1.25"
+        - "1.26"
+        - "1.27"
     node_groups:
       type: array
       title: Node Groups

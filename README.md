@@ -71,7 +71,7 @@ Form input parameters for configuring a bundle for deployment.
       "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
       ```
 
-- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.21', '1.22', '1.23', '1.24']`.
+- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.22', '1.23', '1.24', '1.25', '1.26', '1.27']`. Default: `1.27`.
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
     - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
@@ -114,7 +114,7 @@ Form input parameters for configuring a bundle for deployment.
           "enable_ingress": true,
           "route53_hosted_zones": []
       },
-      "k8s_version": "1.24",
+      "k8s_version": "1.27",
       "node_groups": [
           {
               "advanced_configuration_enabled": false,
@@ -130,7 +130,7 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
-      "k8s_version": "1.24",
+      "k8s_version": "1.27",
       "node_groups": [
           {
               "instance_type": "t3.medium",
@@ -145,7 +145,7 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
-      "k8s_version": "1.24",
+      "k8s_version": "1.27",
       "node_groups": [
           {
               "instance_type": "c5.2xlarge",
