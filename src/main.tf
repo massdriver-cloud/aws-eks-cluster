@@ -96,7 +96,8 @@ resource "aws_launch_template" "nodes" {
   }
 
   dynamic "tag_specifications" {
-    for_each = ["instance", "volume", "elastic-gpu", "network-interface", "spot-instances-request"]
+    // skipping "elastic-gpu" for now due to "Tagging an elastic gpu on create is not yet supported in this region" in some regions
+    for_each = ["instance", "volume", "network-interface", "spot-instances-request"]
     content {
       resource_type = tag_specifications.value
       tags          = merge(var.md_metadata.default_tags, { "Name" : "${local.cluster_name}-${each.value.name_suffix}" })
