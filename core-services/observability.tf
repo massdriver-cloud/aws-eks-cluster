@@ -16,10 +16,18 @@ module "metrics-server" {
 
 // Making this a hard-coded conditional for now. Unless the user is running prometheus (or integrates an observability package like DD)
 // there isn't much point to this service.
-module "kube-state-metrics" {
+# module "kube-state-metrics" {
+#   count       = true ? 1 : 0
+#   source      = "github.com/massdriver-cloud/terraform-modules//k8s-kube-state-metrics?ref=54da4ef"
+#   md_metadata = var.md_metadata
+#   release     = "kube-state-metrics"
+#   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
+# }
+
+module "prometheus-observability" {
   count       = true ? 1 : 0
-  source      = "github.com/massdriver-cloud/terraform-modules//k8s-kube-state-metrics?ref=54da4ef"
+  source      = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-prometheus-observability?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
   md_metadata = var.md_metadata
-  release     = "kube-state-metrics"
+  release     = var.md_metadata.name_prefix
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
 }
