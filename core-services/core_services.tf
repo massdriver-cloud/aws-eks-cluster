@@ -27,15 +27,22 @@ resource "kubernetes_namespace_v1" "md-core-services" {
 }
 
 module "cluster-autoscaler" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=54da4ef"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=823bf41e9ebbc9e44e6c9fbafc65e8e92ca57244"
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
   release            = "aws-cluster-autoscaler"
   namespace          = "kube-system"
+  helm_additional_values = {
+    serviceMonitor = {
+      enabled   = true
+      namespace = "kube-system"
+      selector  = var.md_metadata.default_tags
+    }
+  }
 }
 
 module "ingress_nginx" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=54da4ef"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=823bf41e9ebbc9e44e6c9fbafc65e8e92ca57244"
   count              = var.core_services.enable_ingress ? 1 : 0
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
@@ -43,6 +50,12 @@ module "ingress_nginx" {
   namespace          = kubernetes_namespace_v1.md-core-services.metadata.0.name
   helm_additional_values = {
     controller = {
+      metrics = {
+        enabled = true
+        serviceMonitor = {
+          enabled = true
+        }
+      }
       service = {
         annotations = {
           "service.beta.kubernetes.io/aws-load-balancer-backend-protocol"                  = "tcp"
@@ -57,7 +70,7 @@ module "ingress_nginx" {
 
 module "external_dns" {
   count                = local.enable_external_dns ? 1 : 0
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=64b906f"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=5f995337ee3379adf2265cd9f4338aea4f3b9d6f"
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "external-dns"
@@ -66,7 +79,7 @@ module "external_dns" {
 }
 
 module "cert_manager" {
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=54da4ef"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=5f995337ee3379adf2265cd9f4338aea4f3b9d6f"
   count                = local.enable_cert_manager ? 1 : 0
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata

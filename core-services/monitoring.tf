@@ -1,39 +1,30 @@
 module "alarm_channel" {
   count       = true ? 1 : 0
-  source      = "github.com/massdriver-cloud/terraform-modules//k8s/alarm-channel?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
+  source      = "github.com/massdriver-cloud/terraform-modules//k8s/alarm-channel?ref=e05f16a23f596d46b44fb1def0940562fd059f4d"
   md_metadata = var.md_metadata
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
   release     = var.md_metadata.name_prefix
+
+  depends_on = [module.prometheus-observability]
 }
 
-module "pod_not_ready_alarm" {
-  count                 = true ? 1 : 0
-  source                = "github.com/massdriver-cloud/terraform-modules//k8s/prometheus_alarm?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
-  md_metadata           = var.md_metadata
-  display_name          = "Pods Ready"
-  prometheus_alert_name = "KubePodNotReady"
+module "application_alarms" {
+  count             = true ? 1 : 0
+  source            = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-application-alarms?ref=e05f16a23f596d46b44fb1def0940562fd059f4d"
+  md_metadata       = var.md_metadata
+  pod_alarms        = true
+  deployment_alarms = true
+  daemonset_alarms  = true
+
+  depends_on = [module.prometheus-observability]
 }
 
-module "pod_crash_looping_alarm" {
+module "cluster_autoscaler_max_scale" {
   count                 = true ? 1 : 0
-  source                = "github.com/massdriver-cloud/terraform-modules//k8s/prometheus_alarm?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
+  source                = "github.com/massdriver-cloud/terraform-modules//k8s/prometheus-alarm?ref=e05f16a23f596d46b44fb1def0940562fd059f4d"
   md_metadata           = var.md_metadata
-  display_name          = "Pods Crash Looping"
-  prometheus_alert_name = "KubePodCrashLooping"
-}
+  display_name          = "Cluster Autoscaler Max Scale"
+  prometheus_alert_name = "ClusterAutoscalerUnschedulablePods"
 
-module "deployment_replicas_mismatch_alarm" {
-  count                 = true ? 1 : 0
-  source                = "github.com/massdriver-cloud/terraform-modules//k8s/prometheus_alarm?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
-  md_metadata           = var.md_metadata
-  display_name          = "Deployment Replicas Accurate"
-  prometheus_alert_name = "KubeDeploymentReplicasMismatch"
-}
-
-module "job_failed_alarm" {
-  count                 = true ? 1 : 0
-  source                = "github.com/massdriver-cloud/terraform-modules//k8s/prometheus_alarm?ref=2ba8cd9b49c081c78f659f8c19b9026d73468abf"
-  md_metadata           = var.md_metadata
-  display_name          = "Jobs Succeeded"
-  prometheus_alert_name = "KubeJobFailed"
+  depends_on = [module.prometheus-observability]
 }
