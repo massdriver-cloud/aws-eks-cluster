@@ -27,7 +27,7 @@ resource "kubernetes_namespace_v1" "md-core-services" {
 }
 
 module "cluster-autoscaler" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=823bf41e9ebbc9e44e6c9fbafc65e8e92ca57244"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=3ba41fe"
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
   release            = "aws-cluster-autoscaler"
@@ -39,10 +39,12 @@ module "cluster-autoscaler" {
       selector  = var.md_metadata.default_tags
     }
   }
+
+  depends_on = [module.prometheus-observability]
 }
 
 module "ingress_nginx" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=823bf41e9ebbc9e44e6c9fbafc65e8e92ca57244"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=3ba41fe"
   count              = var.core_services.enable_ingress ? 1 : 0
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
@@ -66,30 +68,36 @@ module "ingress_nginx" {
       }
     }
   }
+
+  depends_on = [module.prometheus-observability]
 }
 
 module "external_dns" {
   count                = local.enable_external_dns ? 1 : 0
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=5f995337ee3379adf2265cd9f4338aea4f3b9d6f"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=3ba41fe"
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "external-dns"
   namespace            = kubernetes_namespace_v1.md-core-services.metadata.0.name
   route53_hosted_zones = local.route53_zone_to_domain_map
+
+  depends_on = [module.prometheus-observability]
 }
 
 module "cert_manager" {
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=5f995337ee3379adf2265cd9f4338aea4f3b9d6f"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=3ba41fe"
   count                = local.enable_cert_manager ? 1 : 0
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "cert-manager"
   namespace            = kubernetes_namespace_v1.md-core-services.metadata.0.name
   route53_hosted_zones = local.route53_zone_to_domain_map
+
+  depends_on = [module.prometheus-observability]
 }
 
 module "efs_csi" {
-  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=1bb39ea"
+  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=3ba41fe"
   count                        = var.core_services.enable_efs_csi ? 1 : 0
   name_prefix                  = var.md_metadata.name_prefix
   eks_cluster_arn              = data.aws_eks_cluster.cluster.arn
@@ -97,4 +105,6 @@ module "efs_csi" {
   release                      = "efs-csi"
   namespace                    = kubernetes_namespace_v1.md-core-services.metadata.0.name
   storage_class_to_efs_arn_map = local.storage_class_to_efs_arn_map
+
+  depends_on = [module.prometheus-observability]
 }
