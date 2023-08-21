@@ -27,7 +27,7 @@ resource "kubernetes_namespace_v1" "md-core-services" {
 }
 
 module "cluster-autoscaler" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=3ba41fe"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=40bbc7b"
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
   release            = "aws-cluster-autoscaler"
@@ -44,7 +44,7 @@ module "cluster-autoscaler" {
 }
 
 module "ingress_nginx" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=3ba41fe"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-ingress-nginx?ref=40bbc7b"
   count              = var.core_services.enable_ingress ? 1 : 0
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
@@ -74,7 +74,7 @@ module "ingress_nginx" {
 
 module "external_dns" {
   count                = local.enable_external_dns ? 1 : 0
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=3ba41fe"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-external-dns-aws?ref=40bbc7b"
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
   release              = "external-dns"
@@ -85,7 +85,7 @@ module "external_dns" {
 }
 
 module "cert_manager" {
-  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=3ba41fe"
+  source               = "github.com/massdriver-cloud/terraform-modules//k8s-cert-manager-aws?ref=40bbc7b"
   count                = local.enable_cert_manager ? 1 : 0
   kubernetes_cluster   = local.kubernetes_cluster_artifact
   md_metadata          = var.md_metadata
@@ -97,7 +97,7 @@ module "cert_manager" {
 }
 
 module "efs_csi" {
-  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=3ba41fe"
+  source                       = "github.com/massdriver-cloud/terraform-modules//k8s/k8s-aws-efs-csi-driver?ref=40bbc7b"
   count                        = var.core_services.enable_efs_csi ? 1 : 0
   name_prefix                  = var.md_metadata.name_prefix
   eks_cluster_arn              = data.aws_eks_cluster.cluster.arn

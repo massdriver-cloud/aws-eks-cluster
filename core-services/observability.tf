@@ -9,7 +9,7 @@ resource "kubernetes_namespace_v1" "md-observability" {
 // since it is effectively replaced by the prometheus-adapter https://github.com/kubernetes-sigs/prometheus-adapter
 module "metrics-server" {
   count       = true ? 1 : 0
-  source      = "github.com/massdriver-cloud/terraform-modules//k8s-metrics-server?ref=3ba41fe"
+  source      = "github.com/massdriver-cloud/terraform-modules//k8s-metrics-server?ref=40bbc7b"
   md_metadata = var.md_metadata
   release     = "metrics-server"
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
@@ -19,7 +19,7 @@ module "metrics-server" {
 
 module "prometheus-observability" {
   count       = true ? 1 : 0
-  source      = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-prometheus-observability?ref=3ba41fe"
+  source      = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-prometheus-observability?ref=40bbc7b"
   md_metadata = var.md_metadata
   release     = "massdriver"
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
@@ -31,7 +31,7 @@ module "prometheus-observability" {
 
 module "prometheus-rules" {
   count       = true ? 1 : 0
-  source      = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-prometheus-rules?ref=3ba41fe"
+  source      = "github.com/massdriver-cloud/terraform-modules//massdriver/k8s-prometheus-rules?ref=40bbc7b"
   md_metadata = var.md_metadata
   release     = "massdriver"
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
