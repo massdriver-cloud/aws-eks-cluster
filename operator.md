@@ -33,6 +33,16 @@ If users associate one or more Route53 domains to their EKS cluster, this bundle
 ### EFS CSI Driver
 Optionally, users can also install the [EFS CSI Driver](https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html) which will allow the EKS cluster to attach EFS volumes to cluster workloads for persistant storage. EFS volumes offer some benefits over EBS volumes, such as [allowing multiple pods to use the volume simultaneously (ReadWriteMany)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) and not being being locked to a single AWS availability zone, but these benefits come with higher storage costs and increased latency.
 
+### Fargate
+
+Fargate can be enabled to allow AWS to provide on-demand, right-sized compute capacity for running containers on EKS without managing node pools or clusters of EC2 instances.
+
+For workloads that require high uptime, its recommended to keep some node pools populated even when enabling Fargate to ensure compute is always available during surges.
+
+Fargate has many [limitations](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
+
+Currently only `namespace` selectors are implemented. If you need `label` selectors please file an [issue](https://github.com/massdriver-cloud/aws-eks-cluster/issues).
+
 ## Best Practices
 ### Managed Node Groups
 Worker nodes in the cluster are provisioned as [managed node groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html).

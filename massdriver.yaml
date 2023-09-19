@@ -45,6 +45,7 @@ params:
     - k8s_version
     - node_groups
     - core_services
+
   properties:
     k8s_version:
       type: string
@@ -58,6 +59,33 @@ params:
         - "1.25"
         - "1.26"
         - "1.27"
+    fargate:
+      type: object
+      title: Fargate
+      description: AWS Fargate provides on-demand, right-sized compute capacity for running containers on EKS without managing node pools or clusters of EC2 instances.
+      dependencies:
+        enabled:
+          oneOf:
+            - properties:
+                enabled:
+                  const: false
+            - required:
+                - namespace
+              properties:
+                enabled:
+                  const: true
+                namespace:
+                  type: string
+                  title: Fargate Namespace
+                  description: The namespace Fargate will schedule pods in.
+                  default: default
+      properties:
+        enabled:
+          type: boolean
+          default: false
+          title: Enable
+          description: Enables EKS Fargate
+          # TODO: select namespace
     node_groups:
       type: array
       title: Node Groups
@@ -228,7 +256,6 @@ params:
                         message:
                           pattern: Must be a valid AWS EFS file system ARN
 
-
 connections:
   required:
     - aws_authentication
@@ -249,6 +276,7 @@ artifacts:
 ui:
   ui:order:
     - k8s_version
+    - fargate
     - node_groups
     - core_services
     - "*"
