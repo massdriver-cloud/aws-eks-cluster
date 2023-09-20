@@ -23,6 +23,23 @@ module "prometheus-observability" {
   md_metadata = var.md_metadata
   release     = "massdriver"
   namespace   = kubernetes_namespace_v1.md-observability.metadata.0.name
+  helm_additional_values = {
+    prometheus-node-exporter = {
+      affinity = {
+        nodeAffinity = {
+          requiredDuringSchedulingIgnoredDuringExecution = {
+            nodeSelectorTerms = [{
+              matchExpressions = [{
+                key      = "eks.amazonaws.com/compute-type"
+                operator = "NotIn"
+                values   = ["fargate"]
+              }]
+            }]
+          }
+        }
+      }
+    }
+  }
 
   // prometheus requires persistent storage, which is managed by the EBS addon. This is more important on destruction since
   // volumes won't unbind properly if the EBS CSI driver is uninstalled before the volume, blocking destruction indefinitely.
