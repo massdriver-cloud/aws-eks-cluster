@@ -74,18 +74,23 @@ params:
               properties:
                 enabled:
                   const: true
-                namespace:
-                  type: string
-                  title: Fargate Namespace
-                  description: The namespace Fargate will schedule pods in.
-                  default: default
+                namespaces:
+                  type: array
+                  items:
+                    $ref: https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/k8s/namespace.json
+                  minItems: 1
+                  uniqueItems: true
+                  title: Fargate Namespaces
+                  description: Namespaces that will run in Fargate
+                  default:
+                    - default
+
       properties:
         enabled:
           type: boolean
           default: false
           title: Enable
           description: Enables EKS Fargate
-          # TODO: select namespace
     node_groups:
       type: array
       title: Node Groups

@@ -26,14 +26,14 @@ resource "aws_iam_role_policy_attachment" "amazon_eks_fargate_pod_execution_role
 }
 
 resource "aws_eks_fargate_profile" "default" {
-  count = var.fargate.enabled ? 1 : 0
+  for_each = toset(var.fargate.namespaces)
 
   cluster_name           = aws_eks_cluster.cluster.name
-  fargate_profile_name   = "${local.cluster_name}-fargate"
+  fargate_profile_name   = "${local.cluster_name}-fargate-${each.key}"
   pod_execution_role_arn = one(aws_iam_role.fargate[*].arn)
   subnet_ids             = local.private_subnet_ids
 
   selector {
-    namespace = var.fargate.namespace
+    namespace = each.key
   }
 }
