@@ -70,7 +70,7 @@ params:
                 enabled:
                   const: false
             - required:
-                - namespace
+                - namespaces
               properties:
                 enabled:
                   const: true
