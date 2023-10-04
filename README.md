@@ -116,6 +116,9 @@ Form input parameters for configuring a bundle for deployment.
           "enable_ingress": true,
           "route53_hosted_zones": []
       },
+      "fargate": {
+          "enabled": false
+      },
       "k8s_version": "1.27",
       "node_groups": [
           {

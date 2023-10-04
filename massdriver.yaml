@@ -17,6 +17,8 @@ params:
   examples:
     - __name: Wizard
       k8s_version: "1.27"
+      fargate:
+        enabled: false
       node_groups:
         - name_suffix: shared
           instance_type: t3.medium

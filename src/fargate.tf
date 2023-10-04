@@ -1,5 +1,9 @@
+locals {
+  fargate_enabled = try(var.fargate.enabled, false)
+}
+
 data "aws_iam_policy_document" "assume_role" {
-  count = var.fargate.enabled ? 1 : 0
+  count = local.fargate_enabled ? 1 : 0
 
   statement {
     effect  = "Allow"
@@ -19,21 +23,21 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "fargate" {
-  count = var.fargate.enabled ? 1 : 0
+  count = local.fargate_enabled ? 1 : 0
 
   name               = "${local.cluster_name}-fargate"
   assume_role_policy = one(data.aws_iam_policy_document.assume_role[*].json)
 }
 
 resource "aws_iam_role_policy_attachment" "amazon_eks_fargate_pod_execution_role" {
-  count = var.fargate.enabled ? 1 : 0
+  count = local.fargate_enabled ? 1 : 0
 
   policy_arn = "arn:${one(data.aws_partition.current[*].partition)}:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
   role       = one(aws_iam_role.fargate[*].name)
 }
 
 resource "aws_eks_fargate_profile" "main" {
-  count = var.fargate.enabled ? 1 : 0
+  count = local.fargate_enabled ? 1 : 0
 
   cluster_name           = aws_eks_cluster.cluster.name
   fargate_profile_name   = "${local.cluster_name}-fargate"
