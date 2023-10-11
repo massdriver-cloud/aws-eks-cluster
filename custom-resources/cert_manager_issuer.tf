@@ -29,7 +29,7 @@ resource "kubernetes_manifest" "cluster_issuer" {
     },
     "spec" = {
       "acme" = {
-        "email" : var.md_metadata.contact_email
+        "email" : var.md_metadata.target.contact_email
         "server" : "https://acme-v02.api.letsencrypt.org/directory"
         "privateKeySecretRef" = {
           "name" : "letsencrypt-prod-issuer-account-key"
