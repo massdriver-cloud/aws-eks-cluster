@@ -19,11 +19,6 @@ data "aws_arn" "eks_cluster" {
   arn = data.aws_eks_cluster.cluster.arn
 }
 
-locals {
-  md_target_metadata   = lookup(var.md_metadata, "target", {})
-  target_contact_email = lookup(local.md_target_metadata, "contact_email", "support+letsencrypt@massdriver.cloud")
-}
-
 resource "kubernetes_manifest" "cluster_issuer" {
   count = local.enable_cert_manager ? 1 : 0
   manifest = {
@@ -34,7 +29,7 @@ resource "kubernetes_manifest" "cluster_issuer" {
     },
     "spec" = {
       "acme" = {
-        "email" : local.target_contact_email
+        "email" : "${var.md_metadata.contact_email}"
         "server" : "https://acme-v02.api.letsencrypt.org/directory"
         "privateKeySecretRef" = {
           "name" : "letsencrypt-prod-issuer-account-key"
