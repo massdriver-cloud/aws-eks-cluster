@@ -74,6 +74,15 @@ Form input parameters for configuring a bundle for deployment.
 - **`fargate`** *(object)*: AWS Fargate provides on-demand, right-sized compute capacity for running containers on EKS without managing node pools or clusters of EC2 instances.
   - **`enabled`** *(boolean)*: Enables EKS Fargate. Default: `False`.
 - **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.22', '1.23', '1.24', '1.25', '1.26', '1.27']`. Default: `1.27`.
+- **`monitoring`** *(object)*
+  - **`control_plane_log_retention`** *(integer)*: Duration to retain control plane logs in AWS Cloudwatch (Note: control plane logs do not contain application or container logs).
+    - **One of**
+      - 7 days
+      - 30 days
+      - 90 days
+      - 180 days
+      - 1 year
+      - Never expire
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
     - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
@@ -120,6 +129,9 @@ Form input parameters for configuring a bundle for deployment.
           "enabled": false
       },
       "k8s_version": "1.27",
+      "monitoring": {
+          "control_plane_log_retention": 7
+      },
       "node_groups": [
           {
               "advanced_configuration_enabled": false,
@@ -136,6 +148,9 @@ Form input parameters for configuring a bundle for deployment.
   {
       "__name": "Development",
       "k8s_version": "1.27",
+      "monitoring": {
+          "control_plane_log_retention": 7
+      },
       "node_groups": [
           {
               "instance_type": "t3.medium",
@@ -151,6 +166,9 @@ Form input parameters for configuring a bundle for deployment.
   {
       "__name": "Production",
       "k8s_version": "1.27",
+      "monitoring": {
+          "control_plane_log_retention": 365
+      },
       "node_groups": [
           {
               "instance_type": "c5.2xlarge",

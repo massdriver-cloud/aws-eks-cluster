@@ -29,6 +29,8 @@ params:
         enable_ingress: true
         route53_hosted_zones: []
         enable_efs_csi: false
+      monitoring:
+        control_plane_log_retention: 7
     - __name: Development
       k8s_version: "1.27"
       node_groups:
@@ -36,6 +38,8 @@ params:
           instance_type: t3.medium
           min_size: 1
           max_size: 10
+      monitoring:
+        control_plane_log_retention: 7
     - __name: Production
       k8s_version: "1.27"
       node_groups:
@@ -43,10 +47,13 @@ params:
           instance_type: c5.2xlarge
           min_size: 1
           max_size: 10
+      monitoring:
+        control_plane_log_retention: 365
   required:
     - k8s_version
     - node_groups
     - core_services
+    - monitoring
 
   properties:
     k8s_version:
@@ -80,12 +87,18 @@ params:
                   type: array
                   items:
                     $ref: https://raw.githubusercontent.com/massdriver-cloud/json-schemas/main/k8s/namespace.json
+                    not:
+                      enum:
+                        - kube-system
+                        - md-core-services
+                        - md-observability
                   minItems: 1
                   uniqueItems: true
                   title: Fargate Namespaces
                   description: Namespaces that will run in Fargate
                   default:
                     - default
+
 
       properties:
         enabled:
@@ -262,6 +275,30 @@ params:
                         pattern: ^arn:aws:elasticfilesystem:[a-z0-9-]*:(?:[0-9]{12})?:file-system\/fs-(?:[a-z0-9]+)?$
                         message:
                           pattern: Must be a valid AWS EFS file system ARN
+    monitoring:
+      type: object
+      title: Monitoring
+      required:
+        - control_plane_log_retention
+      properties:
+        control_plane_log_retention:
+          type: integer
+          title: Control Plane Log Retention
+          description: "Duration to retain control plane logs in AWS Cloudwatch (Note: control plane logs do not contain application or container logs)"
+          oneOf:
+            - title: 7 days
+              const: 7
+            - title: 30 days
+              const: 30
+            - title: 90 days
+              const: 60
+            - title: 180 days
+              const: 180
+            - title: 1 year
+              const: 365
+            - title: Never expire
+              const: 0
+
 
 connections:
   required:
@@ -286,6 +323,7 @@ ui:
     - fargate
     - node_groups
     - core_services
+    - monitoring
     - "*"
   node_groups:
     items:
