@@ -27,7 +27,7 @@ resource "kubernetes_namespace_v1" "md-core-services" {
 }
 
 module "cluster-autoscaler" {
-  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=7d55db6"
+  source             = "github.com/massdriver-cloud/terraform-modules//k8s-cluster-autoscaler-aws?ref=f08f8d6"
   kubernetes_cluster = local.kubernetes_cluster_artifact
   md_metadata        = var.md_metadata
   release            = "aws-cluster-autoscaler"
