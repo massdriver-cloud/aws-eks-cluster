@@ -3,7 +3,7 @@ locals {
 }
 
 module "ebs_csi" {
-  source = "github.com/massdriver-cloud/terraform-modules//k8s/aws-ebs-csi-driver?ref=ffad03a"
+  source = "github.com/massdriver-cloud/terraform-modules//k8s/aws-ebs-csi-driver?ref=b4c1dda"
   // Using a count here in case we ever want to back this out to a conditional
   count               = local.enable_ebs_csi ? 1 : 0
   kubernetes_version  = var.k8s_version

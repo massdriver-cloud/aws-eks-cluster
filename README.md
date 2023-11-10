@@ -83,6 +83,9 @@ Form input parameters for configuring a bundle for deployment.
       - 180 days
       - 1 year
       - Never expire
+  - **`prometheus`** *(object)*: Configuration settings for the Prometheus instances that are automatically installed into the cluster to provide monitoring capabilities".
+    - **`grafana_enabled`** *(boolean)*: Install Grafana into the cluster to provide a metric visualizer. Default: `False`.
+    - **`persistence_enabled`** *(boolean)*: This setting will enable persistence of Prometheus data via EBS volumes. However, in small clusters (less than 5 nodes) this can create problems of pod scheduling and placement due EBS volumes being zonally-locked, and thus should be disabled. Default: `True`.
 - **`node_groups`** *(array)*
   - **Items** *(object)*: Definition of a node group.
     - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
@@ -130,7 +133,11 @@ Form input parameters for configuring a bundle for deployment.
       },
       "k8s_version": "1.27",
       "monitoring": {
-          "control_plane_log_retention": 7
+          "control_plane_log_retention": 7,
+          "prometheus": {
+              "grafana_enabled": false,
+              "persistence_enabled": false
+          }
       },
       "node_groups": [
           {
@@ -149,7 +156,11 @@ Form input parameters for configuring a bundle for deployment.
       "__name": "Development",
       "k8s_version": "1.27",
       "monitoring": {
-          "control_plane_log_retention": 7
+          "control_plane_log_retention": 7,
+          "prometheus": {
+              "grafana_enabled": false,
+              "persistence_enabled": false
+          }
       },
       "node_groups": [
           {
@@ -167,7 +178,11 @@ Form input parameters for configuring a bundle for deployment.
       "__name": "Production",
       "k8s_version": "1.27",
       "monitoring": {
-          "control_plane_log_retention": 365
+          "control_plane_log_retention": 365,
+          "prometheus": {
+              "grafana_enabled": false,
+              "persistence_enabled": true
+          }
       },
       "node_groups": [
           {

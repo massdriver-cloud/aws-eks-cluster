@@ -31,6 +31,9 @@ params:
         enable_efs_csi: false
       monitoring:
         control_plane_log_retention: 7
+        prometheus:
+          persistence_enabled: false
+          grafana_enabled: false
     - __name: Development
       k8s_version: "1.27"
       node_groups:
@@ -40,6 +43,9 @@ params:
           max_size: 10
       monitoring:
         control_plane_log_retention: 7
+        prometheus:
+          persistence_enabled: false
+          grafana_enabled: false
     - __name: Production
       k8s_version: "1.27"
       node_groups:
@@ -49,6 +55,9 @@ params:
           max_size: 10
       monitoring:
         control_plane_log_retention: 365
+        prometheus:
+          persistence_enabled: true
+          grafana_enabled: false
   required:
     - k8s_version
     - node_groups
@@ -280,6 +289,7 @@ params:
       title: Monitoring
       required:
         - control_plane_log_retention
+        - prometheus
       properties:
         control_plane_log_retention:
           type: integer
@@ -299,6 +309,42 @@ params:
               const: 365
             - title: Never expire
               const: 0
+        prometheus:
+          type: object
+          title: Prometheus Configuration
+          description: Configuration settings for the Prometheus instances that are automatically installed into the cluster to provide monitoring capabilities"
+          required:
+          - persistence_enabled
+          - grafana_enabled
+          properties:
+            persistence_enabled:
+              title: Enable Persistence
+              type: boolean
+              description: This setting will enable persistence of Prometheus data via EBS volumes. However, in small clusters (less than 5 nodes) this can create problems of pod scheduling and placement due EBS volumes being zonally-locked, and thus should be disabled.
+              default: true
+            grafana_enabled:
+              title: Enable Grafana
+              type: boolean
+              description: Install Grafana into the cluster to provide a metric visualizer
+              default: false
+          dependencies:
+            grafana_enabled:
+              oneOf:
+              - properties:
+                  grafana_enabled:
+                    const: false
+              - properties:
+                  grafana_enabled:
+                    const: true
+                  grafana_password:
+                    title: Grafana Admin Password
+                    description: Set the password for the `admin` user
+                    type: string
+                    format: password
+                required:
+                - grafana_password
+
+
 
 
 connections:
@@ -350,3 +396,12 @@ ui:
         ui:order:
           - storage_class_name
           - efs_arn
+  monitoring:
+    ui:order:
+      - control_plane_log_retention
+      - prometheus
+    prometheus:
+      ui:order:
+        - persistence_enabled
+        - grafana_enabled
+        - grafana_password
