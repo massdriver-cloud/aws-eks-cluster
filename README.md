@@ -71,6 +71,8 @@ Form input parameters for configuring a bundle for deployment.
       "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
       ```
 
+  - **`route53_hosted_zones_txt_prefix`** *(string)*: A prefix that is added to the name of the TXT records that are used to keep track of DNS entries that are added. This helps avoid name collisions with TXT records that may already exist in the hosted zone. Default: `edns.`.
+  - **`route53_hosted_zones_txt_suffix`** *(string)*: A suffix that is added to the name of the TXT records that are used to keep track of DNS entries that are added. This helps avoid name collisions with TXT records that may already exist in the hosted zone. Default: ``.
 - **`fargate`** *(object)*: AWS Fargate provides on-demand, right-sized compute capacity for running containers on EKS without managing node pools or clusters of EC2 instances.
   - **`enabled`** *(boolean)*: Enables EKS Fargate. Default: `False`.
 - **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.22', '1.23', '1.24', '1.25', '1.26', '1.27']`. Default: `1.27`.
