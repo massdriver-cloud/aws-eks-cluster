@@ -246,6 +246,16 @@ params:
             description: ""
             # TODO: Require a HostedZone ARN: arn:aws:route53:::hostedzone/Z0267127WDKJABXSA830 which isnt _quite a standard ARN.
             $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
+        route53_hosted_zones_txt_prefix:
+          type: string
+          title: Route53 Hosted Zones TXT Prefix
+          description: A prefix that is added to the name of the TXT records that are used to keep track of DNS entries that are added. This helps avoid name collisions with TXT records that may already exist in the hosted zone.
+          default: "edns."
+        route53_hosted_zones_txt_suffix:
+          type: string
+          title: Route53 Hosted Zones TXT Suffix
+          description: A suffix that is added to the name of the TXT records that are used to keep track of DNS entries that are added. This helps avoid name collisions with TXT records that may already exist in the hosted zone.
+          default: ""
         enable_efs_csi:
           type: boolean
           title: Enable EFS Volume Support
