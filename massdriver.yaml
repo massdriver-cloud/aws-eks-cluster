@@ -118,7 +118,7 @@ params:
     node_groups:
       type: array
       title: Node Groups
-      descrition: Node groups to provision
+      description: Node groups to provision
       minItems: 1
       items:
         type: object

@@ -69,7 +69,7 @@ Form input parameters for configuring a bundle for deployment.
   - **`prometheus`** *(object)*: Configuration settings for the Prometheus instances that are automatically installed into the cluster to provide monitoring capabilities".
     - **`grafana_enabled`** *(boolean)*: Install Grafana into the cluster to provide a metric visualizer. Default: `False`.
     - **`persistence_enabled`** *(boolean)*: This setting will enable persistence of Prometheus data via EBS volumes. However, in small clusters (less than 5 nodes) this can create problems of pod scheduling and placement due EBS volumes being zonally-locked, and thus should be disabled. Default: `True`.
-- **`node_groups`** *(array)*
+- **`node_groups`** *(array)*: Node groups to provision.
   - **Items** *(object)*: Definition of a node group.
     - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
     - **`instance_type`** *(string)*: Instance type to use in the node group.

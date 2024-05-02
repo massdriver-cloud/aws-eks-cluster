@@ -59,6 +59,15 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   dynamic "taint" {
+    for_each = [for ng in var.node_groups : ng if can(regex("^p[0-9]\\..*", ng.instance_type))]
+    content {
+      key    = "sku"
+      value  = "gpu"
+      effect = "NO_SCHEDULE"
+    }
+  }
+
+  dynamic "taint" {
     for_each = lookup(each.value, "advanced_configuration_enabled", false) ? [each.value.advanced_configuration.taint] : []
     content {
       key    = taint.value.taint_key
