@@ -59,7 +59,7 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   dynamic "taint" {
-    for_each = [for ng in var.node_groups : ng if can(regex("^p[0-9]\\..*", ng.instance_type))]
+    for_each = length(regexall("^p[0-9]\\..*", each.value.instance_type)) > 0 ? toset(["gpu"]) : toset([])
     content {
       key    = "sku"
       value  = "gpu"

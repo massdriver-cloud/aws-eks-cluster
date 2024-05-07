@@ -1,5 +1,9 @@
+locals {
+  has_gpu = length(coalesce([for ng in var.node_groups : length(regexall("^p[0-9]\\..*", ng.instance_type)) > 1 ? "gpu" : ""])) > 0
+}
+
 resource "kubernetes_daemonset" "nvidia" {
-  count = length([for ng in var.node_groups : ng if can(regex("^[p0-9]\\..*", ng.instance_type))]) > 0 ? 1 : 0
+  count = local.has_gpu ? 1 : 0
   metadata {
     name      = "nvidia-device-plugin-daemonset"
     namespace = kubernetes_namespace_v1.md-core-services.metadata.0.name
