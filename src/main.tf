@@ -3,7 +3,20 @@ locals {
   private_subnet_ids = [for subnet in var.vpc.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
   subnet_ids         = concat(local.public_subnet_ids, local.private_subnet_ids)
 
+  gpu_regex        = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
+  is_gpu_instance  = { for ng in var.node_groups : ng.name_suffix => length(regexall(local.gpu_regex, ng.instance_type)) > 0 }
+  has_gpu_instance = contains(values(local.is_gpu_instance), true)
+
   cluster_name = var.md_metadata.name_prefix
+}
+
+data "aws_ssm_parameter" "eks_ami" {
+  name = "/aws/service/eks/optimized-ami/${var.k8s_version}/amazon-linux-2/recommended/image_id"
+}
+
+data "aws_ssm_parameter" "eks_gpu_ami" {
+  count = local.has_gpu_instance ? 1 : 0
+  name  = "/aws/service/eks/optimized-ami/${var.k8s_version}/amazon-linux-2-gpu/recommended/image_id"
 }
 
 resource "aws_eks_cluster" "cluster" {
@@ -42,10 +55,10 @@ resource "aws_eks_node_group" "node_group" {
   for_each        = { for ng in var.node_groups : ng.name_suffix => ng }
   node_group_name = "${local.cluster_name}-${each.value.name_suffix}"
   cluster_name    = local.cluster_name
-  version         = var.k8s_version
   subnet_ids      = local.private_subnet_ids
   node_role_arn   = aws_iam_role.node.arn
   instance_types  = [each.value.instance_type]
+  ami_type        = "CUSTOM"
 
   launch_template {
     id      = aws_launch_template.nodes[each.key].id
@@ -59,7 +72,7 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   dynamic "taint" {
-    for_each = length(regexall("^p[0-9]\\..*", each.value.instance_type)) > 0 ? toset(["gpu"]) : toset([])
+    for_each = length(regexall(local.gpu_regex, each.value.instance_type)) > 0 ? toset(["gpu"]) : toset([])
     content {
       key    = "sku"
       value  = "gpu"
@@ -94,6 +107,16 @@ resource "aws_launch_template" "nodes" {
   name     = "${local.cluster_name}-${each.value.name_suffix}"
 
   update_default_version = true
+
+  image_id = local.is_gpu_instance[each.key] ? data.aws_ssm_parameter.eks_gpu_ami[0].value : data.aws_ssm_parameter.eks_ami.value
+
+  user_data = base64encode(
+    <<EOF
+#!/bin/bash
+set -o xtrace
+/etc/eks/bootstrap.sh ${local.cluster_name} --kubelet-extra-args '--node-labels=node.kubernetes.io/instancegroup=${each.key}'
+EOF
+  )
 
   metadata_options {
     http_endpoint = "enabled"

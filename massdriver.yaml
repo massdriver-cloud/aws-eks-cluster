@@ -196,14 +196,16 @@ params:
                 const: t3.large
               - title: T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
                 const: t3.xlarge
-              - title: T3 Double Extra Large (8 vCPUs for a 9h 36m burst, 32.0 GiB)
+              - title: T3 2XL (8 vCPUs for a 9h 36m burst, 32.0 GiB)
                 const: t3.2xlarge
-              - title: P2 General Purpose GPU Extra Large (4 vCPUs, 61.0 GiB)
-                const: p2.xlarge
-              - title: P2 General Purpose GPU Eight Extra Large (32 vCPUs, 488.0 GiB)
-                const: p2.8xlarge
-              - title: P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
-                const: p2.16xlarge
+              - title: P3 2XL (1 GPU, 16 GiB GPU Mem, 8 vCPUs, 61.0 GiB Mem)
+                const: p3.2xlarge
+              - title: P3 8XL (4 GPUs, 64 GiB GPU Mem, 32 vCPUs, 244.0 GiB Mem)
+                const: p3.8xlarge
+              - title: P3 16XL (8 GPUs, 128 GiB GPU Mem, 64 vCPUs, 488.0 GiB)
+                const: p3.16xlarge
+              - title: P3dn 24XL (8 GPUs, 256 GiB GPU Mem, 96 vCPUs, 768.0 GiB, 2 x 900 NVMe SSD)
+                const: p3dn.24xlarge
           advanced_configuration_enabled:
             type: boolean
             title: Advanced Configuration Enabled

@@ -94,10 +94,11 @@ Form input parameters for configuring a bundle for deployment.
         - T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
         - T3 Large (2 vCPUs for a 7h 12m burst, 8.0 GiB)
         - T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
-        - T3 Double Extra Large (8 vCPUs for a 9h 36m burst, 32.0 GiB)
-        - P2 General Purpose GPU Extra Large (4 vCPUs, 61.0 GiB)
-        - P2 General Purpose GPU Eight Extra Large (32 vCPUs, 488.0 GiB)
-        - P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
+        - T3 2XL (8 vCPUs for a 9h 36m burst, 32.0 GiB)
+        - P3 2XL (1 GPU, 16 GiB GPU Mem, 8 vCPUs, 61.0 GiB Mem)
+        - P3 8XL (4 GPUs, 64 GiB GPU Mem, 32 vCPUs, 244.0 GiB Mem)
+        - P3 16XL (8 GPUs, 128 GiB GPU Mem, 64 vCPUs, 488.0 GiB)
+        - P3dn 24XL (8 GPUs, 256 GiB GPU Mem, 96 vCPUs, 768.0 GiB, 2 x 900 NVMe SSD)
     - **`max_size`** *(integer)*: Maximum number of instances in the node group. Minimum: `0`. Default: `10`.
     - **`min_size`** *(integer)*: Minimum number of instances in the node group. Minimum: `0`. Default: `1`.
     - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
