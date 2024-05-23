@@ -1,11 +1,11 @@
 locals {
-  gpu_regex = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
-  has_gpu   = length([for ng in var.node_groups : ng if length(regexall(local.gpu_regex, ng.instance_type)) > 0]) > 0
-  is_gpu    = [for ng in var.node_groups : ng.instance_type if length(regexall(local.gpu_regex, ng.instance_type)) > 0]
+  gpu_regex                  = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
+  has_gpu_node_groups        = length([for ng in var.node_groups : ng if length(regexall(local.gpu_regex, ng.instance_type)) > 0]) > 0
+  gpu_enabled_instance_types = [for ng in var.node_groups : ng.instance_type if length(regexall(local.gpu_regex, ng.instance_type)) > 0]
 }
 
 resource "kubernetes_daemonset" "nvidia" {
-  count = local.has_gpu ? 1 : 0
+  count = local.has_gpu_node_groups ? 1 : 0
   metadata {
     name      = "nvidia-device-plugin-daemonset"
     namespace = kubernetes_namespace_v1.md-core-services.metadata.0.name
@@ -40,7 +40,7 @@ resource "kubernetes_daemonset" "nvidia" {
                 match_expressions {
                   key      = "node.kubernetes.io/instance-type"
                   operator = "In"
-                  values   = local.is_gpu
+                  values   = local.gpu_enabled_instance_types
                 }
               }
             }

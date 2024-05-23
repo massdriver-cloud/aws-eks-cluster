@@ -3,9 +3,9 @@ locals {
   private_subnet_ids = [for subnet in var.vpc.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
   subnet_ids         = concat(local.public_subnet_ids, local.private_subnet_ids)
 
-  gpu_regex        = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
-  is_gpu_instance  = { for ng in var.node_groups : ng.name_suffix => length(regexall(local.gpu_regex, ng.instance_type)) > 0 }
-  has_gpu_instance = contains(values(local.is_gpu_instance), true)
+  gpu_regex                  = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
+  gpu_enabled_instance_types = { for ng in var.node_groups : ng.name_suffix => length(regexall(local.gpu_regex, ng.instance_type)) > 0 }
+  has_gpu_node_groups        = contains(values(local.gpu_enabled_instance_types), true)
 
   cluster_name = var.md_metadata.name_prefix
 }
@@ -15,7 +15,7 @@ data "aws_ssm_parameter" "eks_ami" {
 }
 
 data "aws_ssm_parameter" "eks_gpu_ami" {
-  count = local.has_gpu_instance ? 1 : 0
+  count = local.has_gpu_node_groups ? 1 : 0
   name  = "/aws/service/eks/optimized-ami/${var.k8s_version}/amazon-linux-2-gpu/recommended/image_id"
 }
 
@@ -52,13 +52,13 @@ resource "aws_eks_cluster" "cluster" {
 }
 
 resource "aws_eks_node_group" "node_group" {
-  for_each        = { for ng in var.node_groups : ng.name_suffix => ng }
-  node_group_name = "${local.cluster_name}-${each.value.name_suffix}"
-  cluster_name    = local.cluster_name
-  subnet_ids      = local.private_subnet_ids
-  node_role_arn   = aws_iam_role.node.arn
-  instance_types  = [each.value.instance_type]
-  ami_type        = "CUSTOM"
+  for_each               = { for ng in var.node_groups : ng.name_suffix => ng }
+  node_group_name_prefix = "${local.cluster_name}-${each.value.name_suffix}"
+  cluster_name           = local.cluster_name
+  subnet_ids             = local.private_subnet_ids
+  node_role_arn          = aws_iam_role.node.arn
+  instance_types         = [each.value.instance_type]
+  ami_type               = "CUSTOM"
 
   launch_template {
     id      = aws_launch_template.nodes[each.key].id
@@ -108,7 +108,7 @@ resource "aws_launch_template" "nodes" {
 
   update_default_version = true
 
-  image_id = local.is_gpu_instance[each.key] ? data.aws_ssm_parameter.eks_gpu_ami[0].value : data.aws_ssm_parameter.eks_ami.value
+  image_id = local.gpu_enabled_instance_types[each.key] ? data.aws_ssm_parameter.eks_gpu_ami[0].value : data.aws_ssm_parameter.eks_ami.value
 
   user_data = base64encode(
     <<EOF
