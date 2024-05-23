@@ -1,6 +1,6 @@
 locals {
   gpu_regex = "^(p[0-9][a-z]*|g[0-9+][a-z]*|trn[0-9][a-z]*|inf[0-9]|dl[0-9][a-z]*|f[0-9]|vt[0-9])\\..*"
-  has_gpu   = length(coalesce([for ng in var.node_groups : length(regexall(local.gpu_regex, ng.instance_type)) > 1 ? "gpu" : ""])) > 0
+  has_gpu   = length([for ng in var.node_groups : ng if length(regexall(local.gpu_regex, ng.instance_type)) > 0]) > 0
   is_gpu    = [for ng in var.node_groups : ng.instance_type if length(regexall(local.gpu_regex, ng.instance_type)) > 0]
 }
 
