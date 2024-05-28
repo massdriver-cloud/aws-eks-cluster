@@ -58,7 +58,6 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids             = local.private_subnet_ids
   node_role_arn          = aws_iam_role.node.arn
   instance_types         = [each.value.instance_type]
-  ami_type               = "CUSTOM"
 
   launch_template {
     id      = aws_launch_template.nodes[each.key].id
