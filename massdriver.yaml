@@ -160,35 +160,35 @@ params:
             oneOf:
               - title: C5 High-CPU Large (2 vCPUs, 4.0 GiB)
                 const: c5.large
-              - title: C5 High-CPU Extra Large (4 vCPUs, 8.0 GiB)
+              - title: C5 High-CPU XL (4 vCPUs, 8.0 GiB)
                 const: c5.xlarge
-              - title: C5 High-CPU Double Extra Large (8 vCPUs, 16.0 GiB)
+              - title: C5 High-CPU 2XL (8 vCPUs, 16.0 GiB)
                 const: c5.2xlarge
-              - title: C5 High-CPU Quadruple Extra Large (16 vCPUs, 32.0 GiB)
+              - title: C5 High-CPU 4XL (16 vCPUs, 32.0 GiB)
                 const: c5.4xlarge
-              - title: C5 High-CPU 9xlarge (36 vCPUs, 72.0 GiB)
+              - title: C5 High-CPU 9XL (36 vCPUs, 72.0 GiB)
                 const: c5.9xlarge
-              - title: C5 High-CPU 12xlarge (48 vCPUs, 96.0 GiB)
+              - title: C5 High-CPU 12XL (48 vCPUs, 96.0 GiB)
                 const: c5.12xlarge
-              - title: C5 High-CPU 18xlarge (72 vCPUs, 144.0 GiB)
+              - title: C5 High-CPU 18XL (72 vCPUs, 144.0 GiB)
                 const: c5.18xlarge
-              - title: C5 High-CPU 24xlarge (96 vCPUs, 192.0 GiB)
+              - title: C5 High-CPU 24XL (96 vCPUs, 192.0 GiB)
                 const: c5.24xlarge
               - title: M5 General Purpose Large (2 vCPUs, 8.0 GiB)
                 const: m5.large
-              - title: M5 General Purpose Extra Large (4 vCPUs, 16.0 GiB)
+              - title: M5 General Purpose XL (4 vCPUs, 16.0 GiB)
                 const: m5.xlarge
-              - title: M5 General Purpose Double Extra Large (8 vCPUs, 32.0 GiB)
+              - title: M5 General Purpose 2XL (8 vCPUs, 32.0 GiB)
                 const: m5.2xlarge
-              - title: M5 General Purpose Quadruple Extra Large (16 vCPUs, 64.0 GiB)
+              - title: M5 General Purpose 4XL (16 vCPUs, 64.0 GiB)
                 const: m5.4xlarge
-              - title: M5 General Purpose Eight Extra Large (32 vCPUs, 128.0 GiB)
+              - title: M5 General Purpose 8XL (32 vCPUs, 128.0 GiB)
                 const: m5.8xlarge
-              - title: M5 General Purpose 12xlarge (48 vCPUs, 192.0 GiB)
+              - title: M5 General Purpose 12XL (48 vCPUs, 192.0 GiB)
                 const: m5.12xlarge
-              - title: M5 General Purpose 16xlarge (64 vCPUs, 256.0 GiB)
+              - title: M5 General Purpose 16XL (64 vCPUs, 256.0 GiB)
                 const: m5.16xlarge
-              - title: M5 General Purpose 24xlarge (96 vCPUs, 384.0 GiB)
+              - title: M5 General Purpose 24XL (96 vCPUs, 384.0 GiB)
                 const: m5.24xlarge
               - title: T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
                 const: t3.small
@@ -196,7 +196,7 @@ params:
                 const: t3.medium
               - title: T3 Large (2 vCPUs for a 7h 12m burst, 8.0 GiB)
                 const: t3.large
-              - title: T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
+              - title: T3 XL (4 vCPUs for a 9h 36m burst, 16.0 GiB)
                 const: t3.xlarge
               - title: T3 2XL (8 vCPUs for a 9h 36m burst, 32.0 GiB)
                 const: t3.2xlarge
@@ -267,7 +267,7 @@ params:
                 storage_class_to_efs_map:
                   type: array
                   title: Storage Classes
-                  description: You may optionally specify a storage class name for each EFS file system you would like to use for persistent volumes. In addition, by specifying any EFS volumes here you will limit the provisioner to only be able to create persistent volumes use the listed EFS file systems. By leaving this blank, all file systems are usable.
+                  description: You may optionally specify a storage class name for each EFS file system you would like to use for persistent volumes. In addition, by specifying any EFS volumes here you will limit the provisioner to only be able to create peristent volumes use the listed EFS file systems. By leaving this blank, all file systems are usable.
                   default: []
                   items:
                     type: object
