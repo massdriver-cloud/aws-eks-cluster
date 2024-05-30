@@ -56,9 +56,9 @@ resource "kubernetes_daemonset" "nvidia" {
           effect   = "NoSchedule"
         }
         toleration {
-          key      = "sku"
+          key      = "gpu"
           operator = "Equal"
-          value    = "gpu"
+          value    = "true"
           effect   = "NoSchedule"
         }
         container {

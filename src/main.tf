@@ -73,8 +73,8 @@ resource "aws_eks_node_group" "node_group" {
   dynamic "taint" {
     for_each = length(regexall(local.gpu_regex, each.value.instance_type)) > 0 ? toset(["gpu"]) : toset([])
     content {
-      key    = "sku"
-      value  = "gpu"
+      key    = "gpu"
+      value  = "true"
       effect = "NO_SCHEDULE"
     }
   }
