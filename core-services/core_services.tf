@@ -80,6 +80,10 @@ module "external_dns" {
   release              = "external-dns"
   namespace            = kubernetes_namespace_v1.md-core-services.metadata.0.name
   route53_hosted_zones = local.route53_zone_to_domain_map
+  helm_additional_values = {
+    txtPrefix = var.core_services.route53_hosted_zones_txt_prefix
+    txtSuffix = var.core_services.route53_hosted_zones_txt_suffix
+  }
 
   depends_on = [module.prometheus-observability]
 }
