@@ -17,7 +17,7 @@ Elastic Kubernetes Service is an open source container orchestration platform th
 
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 
@@ -56,7 +56,7 @@ Form input parameters for configuring a bundle for deployment.
 
 - **`fargate`** *(object)*: AWS Fargate provides on-demand, right-sized compute capacity for running containers on EKS without managing node pools or clusters of EC2 instances.
   - **`enabled`** *(boolean)*: Enables EKS Fargate. Default: `False`.
-- **`k8s_version`** *(string)*: The version of Kubernetes to run. Must be one of: `['1.22', '1.23', '1.24', '1.25', '1.26', '1.27']`. Default: `1.27`.
+- **`k8s_version`** *(string)*: The version of Kubernetes to run. **WARNING: Upgrading Kubernetes version must be done one minor version at a time**. For example, upgrading from 1.28 to 1.30 requires upgrading to 1.29 first. Must be one of: `['1.22', '1.23', '1.24', '1.25', '1.26', '1.27', '1.28', '1.29', '1.30']`. Default: `1.30`.
 - **`monitoring`** *(object)*
   - **`control_plane_log_retention`** *(integer)*: Duration to retain control plane logs in AWS Cloudwatch (Note: control plane logs do not contain application or container logs). Default: `7`.
     - **One of**
@@ -69,35 +69,32 @@ Form input parameters for configuring a bundle for deployment.
   - **`prometheus`** *(object)*: Configuration settings for the Prometheus instances that are automatically installed into the cluster to provide monitoring capabilities".
     - **`grafana_enabled`** *(boolean)*: Install Grafana into the cluster to provide a metric visualizer. Default: `False`.
     - **`persistence_enabled`** *(boolean)*: This setting will enable persistence of Prometheus data via EBS volumes. However, in small clusters (less than 5 nodes) this can create problems of pod scheduling and placement due EBS volumes being zonally-locked, and thus should be disabled. Default: `True`.
-- **`node_groups`** *(array)*
+- **`node_groups`** *(array)*: Node groups to provision.
   - **Items** *(object)*: Definition of a node group.
     - **`advanced_configuration_enabled`** *(boolean)*: Default: `False`.
     - **`instance_type`** *(string)*: Instance type to use in the node group.
       - **One of**
         - C5 High-CPU Large (2 vCPUs, 4.0 GiB)
-        - C5 High-CPU Extra Large (4 vCPUs, 8.0 GiB)
-        - C5 High-CPU Double Extra Large (8 vCPUs, 16.0 GiB)
-        - C5 High-CPU Quadruple Extra Large (16 vCPUs, 32.0 GiB)
-        - C5 High-CPU 9xlarge (36 vCPUs, 72.0 GiB)
-        - C5 High-CPU 12xlarge (48 vCPUs, 96.0 GiB)
-        - C5 High-CPU 18xlarge (72 vCPUs, 144.0 GiB)
-        - C5 High-CPU 24xlarge (96 vCPUs, 192.0 GiB)
+        - C5 High-CPU XL (4 vCPUs, 8.0 GiB)
+        - C5 High-CPU 2XL (8 vCPUs, 16.0 GiB)
+        - C5 High-CPU 4XL (16 vCPUs, 32.0 GiB)
+        - C5 High-CPU 9XL (36 vCPUs, 72.0 GiB)
+        - C5 High-CPU 12XL (48 vCPUs, 96.0 GiB)
+        - C5 High-CPU 18XL (72 vCPUs, 144.0 GiB)
+        - C5 High-CPU 24XL (96 vCPUs, 192.0 GiB)
         - M5 General Purpose Large (2 vCPUs, 8.0 GiB)
-        - M5 General Purpose Extra Large (4 vCPUs, 16.0 GiB)
-        - M5 General Purpose Double Extra Large (8 vCPUs, 32.0 GiB)
-        - M5 General Purpose Quadruple Extra Large (16 vCPUs, 64.0 GiB)
-        - M5 General Purpose Eight Extra Large (32 vCPUs, 128.0 GiB)
-        - M5 General Purpose 12xlarge (48 vCPUs, 192.0 GiB)
-        - M5 General Purpose 16xlarge (64 vCPUs, 256.0 GiB)
-        - M5 General Purpose 24xlarge (96 vCPUs, 384.0 GiB)
+        - M5 General Purpose XL (4 vCPUs, 16.0 GiB)
+        - M5 General Purpose 2XL (8 vCPUs, 32.0 GiB)
+        - M5 General Purpose 4XL (16 vCPUs, 64.0 GiB)
+        - M5 General Purpose 8XL (32 vCPUs, 128.0 GiB)
+        - M5 General Purpose 12XL (48 vCPUs, 192.0 GiB)
+        - M5 General Purpose 16XL (64 vCPUs, 256.0 GiB)
+        - M5 General Purpose 24XL (96 vCPUs, 384.0 GiB)
         - T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
         - T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
         - T3 Large (2 vCPUs for a 7h 12m burst, 8.0 GiB)
-        - T3 Extra Large (4 vCPUs for a 9h 36m burst, 16.0 GiB)
-        - T3 Double Extra Large (8 vCPUs for a 9h 36m burst, 32.0 GiB)
-        - P2 General Purpose GPU Extra Large (4 vCPUs, 61.0 GiB)
-        - P2 General Purpose GPU Eight Extra Large (32 vCPUs, 488.0 GiB)
-        - P2 General Purpose GPU 16xlarge (64 vCPUs, 732.0 GiB)
+        - T3 XL (4 vCPUs for a 9h 36m burst, 16.0 GiB)
+        - T3 2XL (8 vCPUs for a 9h 36m burst, 32.0 GiB)
     - **`max_size`** *(integer)*: Maximum number of instances in the node group. Minimum: `0`. Default: `10`.
     - **`min_size`** *(integer)*: Minimum number of instances in the node group. Minimum: `0`. Default: `1`.
     - **`name_suffix`** *(string)*: The name of the node group. Default: ``.
@@ -114,7 +111,7 @@ Form input parameters for configuring a bundle for deployment.
       "fargate": {
           "enabled": false
       },
-      "k8s_version": "1.27",
+      "k8s_version": "1.30",
       "monitoring": {
           "control_plane_log_retention": 7,
           "prometheus": {
@@ -137,7 +134,7 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
-      "k8s_version": "1.27",
+      "k8s_version": "1.30",
       "monitoring": {
           "control_plane_log_retention": 7,
           "prometheus": {
@@ -159,7 +156,7 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
-      "k8s_version": "1.27",
+      "k8s_version": "1.30",
       "monitoring": {
           "control_plane_log_retention": 365,
           "prometheus": {
