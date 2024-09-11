@@ -250,20 +250,6 @@ Connections from other bundles that this bundle depends on.
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
             ```
 
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
-            ```
-
 
           Examples:
       - **`private_subnets`** *(array)*
@@ -279,20 +265,6 @@ Connections from other bundles that this bundle depends on.
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
             ```
 
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
-            ```
-
 
           Examples:
       - **`public_subnets`** *(array)*
@@ -306,20 +278,6 @@ Connections from other bundles that this bundle depends on.
 
             ```json
             "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
-            ```
-
-          - **`aws_zone`** *(string)*: AWS Availability Zone.
-
-            Examples:
-          - **`cidr`** *(string)*
-
-            Examples:
-            ```json
-            "10.100.0.0/16"
-            ```
-
-            ```json
-            "192.24.12.0/22"
             ```
 
 
