@@ -24,12 +24,16 @@ data "aws_eks_cluster" "cluster" {
   name = var.md_metadata.name_prefix
 }
 
+data "aws_arn" "cluster" {
+  arn = data.aws_eks_cluster.cluster.arn
+}
+
 data "aws_eks_cluster_auth" "auth" {
   name = var.md_metadata.name_prefix
 }
 
 provider "aws" {
-  region = var.vpc.specs.aws.region
+  region = local.region
   assume_role {
     role_arn    = var.aws_authentication.data.arn
     external_id = var.aws_authentication.data.external_id
