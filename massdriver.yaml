@@ -3,7 +3,6 @@ name: aws-eks-cluster
 version: 1.0.0
 description: Elastic Kubernetes Service is an open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 source_url: https://github.com/massdriver-cloud/aws-eks-cluster
-type: application
 steps:
 - path: src
   provisioner: opentofu
