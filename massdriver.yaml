@@ -3,6 +3,7 @@ name: aws-eks-cluster
 version: 1.0.0
 description: Elastic Kubernetes Service is an open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 source_url: https://github.com/massdriver-cloud/aws-eks-cluster
+
 steps:
 - path: src
   provisioner: opentofu
@@ -10,6 +11,7 @@ steps:
   provisioner: opentofu
 - path: custom-resources
   provisioner: opentofu
+
 params:
   examples:
   - __name: Wizard
@@ -64,7 +66,7 @@ params:
     k8s_version:
       type: string
       title: Kubernetes Version
-      description: 'The version of Kubernetes to run. **WARNING: Upgrading Kubernetes version must be done one minor version at a time**. For example, upgrading from 1.28 to 1.30 requires upgrading to 1.29 first.'
+      description: 'The version of Kubernetes to run. **WARNING: Upgrading Kubernetes version must be done one minor version at a time**. For example, upgrading from 1.31 to 1.33 requires upgrading to 1.32 first.'
       default: '1.33'
       enum:
       - '1.27'
@@ -331,6 +333,7 @@ params:
                     format: password
                 required:
                 - grafana_password
+
 connections:
   required:
   - aws_authentication
@@ -340,12 +343,14 @@ connections:
       "$ref": massdriver/aws-iam-role
     vpc:
       "$ref": massdriver/aws-vpc
+
 artifacts:
   required:
   - kubernetes_cluster
   properties:
     kubernetes_cluster:
       "$ref": massdriver/kubernetes-cluster
+
 ui:
   ui:order:
   - k8s_version
