@@ -39,8 +39,7 @@ locals {
 }
 
 resource "massdriver_artifact" "kubernetes_cluster" {
-  field                = "kubernetes_cluster"
-  provider_resource_id = data.aws_eks_cluster.cluster.arn
-  name                 = "EKS Cluster Credentials ${data.aws_eks_cluster.cluster.name} [${var.vpc.specs.aws.region}]"
-  artifact             = jsonencode(local.kubernetes_cluster_artifact)
+  field    = "kubernetes_cluster"
+  name     = "EKS Cluster Credentials ${data.aws_eks_cluster.cluster.name} [${var.vpc.specs.aws.region}]"
+  artifact = jsonencode(local.kubernetes_cluster_artifact)
 }
