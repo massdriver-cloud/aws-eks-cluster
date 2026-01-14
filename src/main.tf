@@ -1,4 +1,5 @@
 locals {
+  vpc_id             = element(split("/", var.vpc.data.infrastructure.arn), 1)
   public_subnet_ids  = [for subnet in var.vpc.data.infrastructure.public_subnets : element(split("/", subnet["arn"]), 1)]
   private_subnet_ids = [for subnet in var.vpc.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
   subnet_ids         = concat(local.public_subnet_ids, local.private_subnet_ids)
@@ -13,15 +14,22 @@ resource "aws_eks_cluster" "cluster" {
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
+  access_config {
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = true
+  }
+
   encryption_config {
     provider {
       key_arn = module.kms.key_arn
     }
-    resources = ["secrets"]
+        resources = ["secrets"]
   }
 
   vpc_config {
-    subnet_ids = local.subnet_ids
+    subnet_ids              = local.subnet_ids
+    endpoint_private_access = true
+    endpoint_public_access  = true
   }
 
   kubernetes_network_config {
@@ -29,23 +37,29 @@ resource "aws_eks_cluster" "cluster" {
     ip_family         = "ipv4"
   }
 
+  upgrade_policy {
+    support_type = "STANDARD"
+  }
+
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
-    aws_iam_role_policy_attachment.cluster-eks,
-    aws_iam_role_policy_attachment.cluster-vpc,
+    aws_iam_role_policy_attachment.cluster_eks,
+    aws_iam_role_policy_attachment.cluster_vpc,
+    aws_iam_role_policy_attachment.cluster_encryption,
     aws_cloudwatch_log_group.control_plane
   ]
 }
 
 resource "aws_eks_node_group" "node_group" {
-  for_each        = { for ng in var.node_groups : ng.name_suffix => ng }
-  node_group_name = "${local.cluster_name}-${each.value.name_suffix}"
+  for_each        = { for ng in var.node_groups : ng.name => ng }
+  node_group_name = each.value.name
   cluster_name    = local.cluster_name
   version         = var.k8s_version
   subnet_ids      = local.private_subnet_ids
   node_role_arn   = aws_iam_role.node.arn
   instance_types  = [each.value.instance_type]
+  ami_type        = "AL2023_x86_64_STANDARD"
 
   launch_template {
     id      = aws_launch_template.nodes[each.key].id
@@ -56,6 +70,10 @@ resource "aws_eks_node_group" "node_group" {
     desired_size = each.value.min_size
     max_size     = each.value.max_size
     min_size     = each.value.min_size
+  }
+
+  update_config {
+    max_unavailable_percentage = 33
   }
 
   dynamic "taint" {
@@ -80,18 +98,19 @@ resource "aws_eks_node_group" "node_group" {
   ]
 }
 
+#checkov:skip=CKV_AWS_341:EKS requires hop limit of 2 for IRSA and cloud controller functionality
 resource "aws_launch_template" "nodes" {
-  for_each = { for ng in var.node_groups : ng.name_suffix => ng }
-  name     = "${local.cluster_name}-${each.value.name_suffix}"
+  for_each = { for ng in var.node_groups : ng.name => ng }
+  name     = "${local.cluster_name}-${each.value.name}"
 
   update_default_version = true
 
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
-    // The node IAM role only has permissions for ECR, Networking and EKS. There shouldn't be any
-    // reason for pods to need access to the instance role (pods should use IRSA), hence a hop limit of 1
-    http_put_response_hop_limit = 1
+    // Hop limit must be 2 for pods to access IMDS for IRSA and cloud controller functionality
+    // AL2023 + IMDSv2 requires hop limit of 2 for container networking to work properly
+    http_put_response_hop_limit = 2
     instance_metadata_tags      = "enabled"
   }
 
@@ -100,7 +119,18 @@ resource "aws_launch_template" "nodes" {
     for_each = ["instance", "volume", "network-interface", "spot-instances-request"]
     content {
       resource_type = tag_specifications.value
-      tags          = merge(var.md_metadata.default_tags, { "Name" : "${local.cluster_name}-${each.value.name_suffix}" })
+      tags          = merge(var.md_metadata.default_tags, { "Name" : "${local.cluster_name}-${each.value.name}" })
     }
   }
+}
+
+# EKS Access Entry for Nodes - Required for API-based authentication mode
+resource "aws_eks_access_entry" "nodes" {
+  cluster_name  = aws_eks_cluster.cluster.name
+  principal_arn = aws_iam_role.node.arn
+  type          = "EC2_LINUX"
+
+  depends_on = [
+    aws_eks_cluster.cluster
+  ]
 }

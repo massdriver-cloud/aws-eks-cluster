@@ -48,6 +48,16 @@ A cluster autoscaler is automatically installed to provide node autoscaling as w
 Cluster is pre-configured for out-of-the box support of [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
 
 
+## Node AMI Type
+This EKS cluster uses **Amazon Linux 2023 (AL2023)** for all node groups. AL2023 provides enhanced security and performance with features including:
+- Secure-by-default approach with preconfigured security policies
+- SELinux in permissive mode
+- IMDSv2-only mode enabled by default
+- Optimized boot times
+- Improved package management
+
+This replaces the deprecated Amazon Linux 2 (AL2), which reached end-of-support on November 26, 2025.
+
 ## Security
 ### Nodes Deployed into Private Subnets
 Worker nodes are provisioned into private subnets for security.

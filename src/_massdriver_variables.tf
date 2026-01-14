@@ -12,17 +12,6 @@ variable "aws_authentication" {
     })
   })
 }
-variable "core_services" {
-  type = object({
-    enable_efs_csi       = optional(bool)
-    enable_ingress       = optional(bool)
-    route53_hosted_zones = optional(list(string))
-    storage_class_to_efs_map = optional(list(object({
-      efs_arn            = string
-      storage_class_name = string
-    })))
-  })
-}
 variable "fargate" {
   type = object({
     enabled    = optional(bool)
@@ -63,11 +52,6 @@ variable "md_metadata" {
 variable "monitoring" {
   type = object({
     control_plane_log_retention = number
-    prometheus = object({
-      grafana_enabled     = bool
-      persistence_enabled = bool
-      grafana_password    = optional(string)
-    })
   })
 }
 variable "node_groups" {
@@ -76,7 +60,7 @@ variable "node_groups" {
     instance_type                  = string
     max_size                       = number
     min_size                       = number
-    name_suffix                    = string
+    name                           = string
     advanced_configuration = optional(object({
       taint = optional(object({
         effect      = string

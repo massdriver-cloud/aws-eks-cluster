@@ -1,6 +1,6 @@
 schema: draft-07
 name: aws-eks-cluster
-version: 1.0.0
+version: 2.0.0
 description: Elastic Kubernetes Service is an open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 source_url: https://github.com/massdriver-cloud/aws-eks-cluster
 
@@ -9,65 +9,43 @@ steps:
   provisioner: opentofu
 - path: core-services
   provisioner: opentofu
-- path: custom-resources
-  provisioner: opentofu
 
 params:
   examples:
   - __name: Wizard
-    k8s_version: '1.33'
+    k8s_version: '1.34'
     fargate:
       enabled: false
     node_groups:
-    - name_suffix: shared
+    - name: shared
       instance_type: t3.medium
       min_size: 1
       max_size: 10
       advanced_configuration_enabled: false
-    core_services:
-      enable_ingress: true
-      route53_hosted_zones: []
-      enable_efs_csi: false
-    monitoring:
-      control_plane_log_retention: 7
-      prometheus:
-        persistence_enabled: false
-        grafana_enabled: false
   - __name: Development
-    k8s_version: '1.33'
+    k8s_version: '1.34'
     node_groups:
-    - name_suffix: shared
+    - name: shared
       instance_type: t3.medium
       min_size: 1
       max_size: 10
-    monitoring:
-      control_plane_log_retention: 7
-      prometheus:
-        persistence_enabled: false
-        grafana_enabled: false
   - __name: Production
-    k8s_version: '1.33'
+    k8s_version: '1.34'
     node_groups:
-    - name_suffix: shared
+    - name: shared
       instance_type: c5.2xlarge
       min_size: 1
       max_size: 10
-    monitoring:
-      control_plane_log_retention: 365
-      prometheus:
-        persistence_enabled: true
-        grafana_enabled: false
   required:
   - k8s_version
   - node_groups
-  - core_services
   - monitoring
   properties:
     k8s_version:
       type: string
       title: Kubernetes Version
       description: 'The version of Kubernetes to run. **WARNING: Upgrading Kubernetes version must be done one minor version at a time**. For example, upgrading from 1.31 to 1.33 requires upgrading to 1.32 first.'
-      default: '1.33'
+      default: '1.34'
       enum:
       - '1.27'
       - '1.28'
@@ -76,6 +54,7 @@ params:
       - '1.31'
       - '1.32'
       - '1.33'
+      - '1.34'
     fargate:
       type: object
       title: Fargate
@@ -122,13 +101,13 @@ params:
         title: Node Group
         description: Definition of a node group
         required:
-        - name_suffix
+        - name
         - instance_type
         - min_size
         - max_size
         - advanced_configuration_enabled
         properties:
-          name_suffix:
+          name:
             type: string
             title: Name
             description: The name of the node group
@@ -153,6 +132,26 @@ params:
             description: Instance type to use in the node group
             type: string
             oneOf:
+            - title: C7i High-CPU Large (2 vCPUs, 4.0 GiB)
+              const: c7i.large
+            - title: C7i High-CPU XL (4 vCPUs, 8.0 GiB)
+              const: c7i.xlarge
+            - title: C7i High-CPU 2XL (8 vCPUs, 16.0 GiB)
+              const: c7i.2xlarge
+            - title: C7i High-CPU 4XL (16 vCPUs, 32.0 GiB)
+              const: c7i.4xlarge
+            - title: C7i High-CPU 8XL (32 vCPUs, 64.0 GiB)
+              const: c7i.8xlarge
+            - title: C6i High-CPU Large (2 vCPUs, 4.0 GiB)
+              const: c6i.large
+            - title: C6i High-CPU XL (4 vCPUs, 8.0 GiB)
+              const: c6i.xlarge
+            - title: C6i High-CPU 2XL (8 vCPUs, 16.0 GiB)
+              const: c6i.2xlarge
+            - title: C6i High-CPU 4XL (16 vCPUs, 32.0 GiB)
+              const: c6i.4xlarge
+            - title: C6i High-CPU 8XL (32 vCPUs, 64.0 GiB)
+              const: c6i.8xlarge
             - title: C5 High-CPU Large (2 vCPUs, 4.0 GiB)
               const: c5.large
             - title: C5 High-CPU XL (4 vCPUs, 8.0 GiB)
@@ -169,6 +168,26 @@ params:
               const: c5.18xlarge
             - title: C5 High-CPU 24XL (96 vCPUs, 192.0 GiB)
               const: c5.24xlarge
+            - title: M7i General Purpose Large (2 vCPUs, 8.0 GiB)
+              const: m7i.large
+            - title: M7i General Purpose XL (4 vCPUs, 16.0 GiB)
+              const: m7i.xlarge
+            - title: M7i General Purpose 2XL (8 vCPUs, 32.0 GiB)
+              const: m7i.2xlarge
+            - title: M7i General Purpose 4XL (16 vCPUs, 64.0 GiB)
+              const: m7i.4xlarge
+            - title: M7i General Purpose 8XL (32 vCPUs, 128.0 GiB)
+              const: m7i.8xlarge
+            - title: M6i General Purpose Large (2 vCPUs, 8.0 GiB)
+              const: m6i.large
+            - title: M6i General Purpose XL (4 vCPUs, 16.0 GiB)
+              const: m6i.xlarge
+            - title: M6i General Purpose 2XL (8 vCPUs, 32.0 GiB)
+              const: m6i.2xlarge
+            - title: M6i General Purpose 4XL (16 vCPUs, 64.0 GiB)
+              const: m6i.4xlarge
+            - title: M6i General Purpose 8XL (32 vCPUs, 128.0 GiB)
+              const: m6i.8xlarge
             - title: M5 General Purpose Large (2 vCPUs, 8.0 GiB)
               const: m5.large
             - title: M5 General Purpose XL (4 vCPUs, 16.0 GiB)
@@ -185,6 +204,22 @@ params:
               const: m5.16xlarge
             - title: M5 General Purpose 24XL (96 vCPUs, 384.0 GiB)
               const: m5.24xlarge
+            - title: R7i Memory Optimized Large (2 vCPUs, 16.0 GiB)
+              const: r7i.large
+            - title: R7i Memory Optimized XL (4 vCPUs, 32.0 GiB)
+              const: r7i.xlarge
+            - title: R7i Memory Optimized 2XL (8 vCPUs, 64.0 GiB)
+              const: r7i.2xlarge
+            - title: R7i Memory Optimized 4XL (16 vCPUs, 128.0 GiB)
+              const: r7i.4xlarge
+            - title: R6i Memory Optimized Large (2 vCPUs, 16.0 GiB)
+              const: r6i.large
+            - title: R6i Memory Optimized XL (4 vCPUs, 32.0 GiB)
+              const: r6i.xlarge
+            - title: R6i Memory Optimized 2XL (8 vCPUs, 64.0 GiB)
+              const: r6i.2xlarge
+            - title: R6i Memory Optimized 4XL (16 vCPUs, 128.0 GiB)
+              const: r6i.4xlarge
             - title: T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
               const: t3.small
             - title: T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
@@ -216,70 +251,11 @@ params:
                       "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/k8s-node-taint.json
                       description: "**Warning**: if you only have one node pool, and it has a taint, other core workloads may not be able to be scheduled and provisioning will fail. If you want to taint a node group, it's recommended that you have another, non-tainted pool for these workloads."
                       "$md.immutable": true
-    core_services:
-      type: object
-      title: Core Services
-      description: Configure core services in Kubernetes for Massdriver to manage
-      required: []
-      properties:
-        enable_ingress:
-          type: boolean
-          title: Enable Ingress
-          description: Enabling this will create an nginx ingress controller in the cluster, allowing internet traffic to flow into web accessible services within the cluster
-          default: false
-        route53_hosted_zones:
-          type: array
-          title: Route53 Hosted Zones
-          description: Route53 Hosted Zones to associate with this cluster. Enables Kubernetes to automatically manage DNS records and SSL certificates. Hosted Zones can be configured at https://app.massdriver.cloud/dns-zones.
-          default: []
-          items:
-            title: Route53 Hosted Zone
-            description: ''
-            "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/aws-arn.json
-        enable_efs_csi:
-          type: boolean
-          title: Enable EFS Volume Support
-          description: Enabling this will install the AWS EFS storage controller into your cluster, allowing you to provision persistent volumes backed by EFS file systems.
-          default: false
-      dependencies:
-        enable_efs_csi:
-          oneOf:
-          - properties:
-              enable_efs_csi:
-                const: false
-          - properties:
-              enable_efs_csi:
-                const: true
-              storage_class_to_efs_map:
-                type: array
-                title: Storage Classes
-                description: You may optionally specify a storage class name for each EFS file system you would like to use for persistent volumes. In addition, by specifying any EFS volumes here you will limit the provisioner to only be able to create peristent volumes use the listed EFS file systems. By leaving this blank, all file systems are usable.
-                default: []
-                items:
-                  type: object
-                  title: Storage Class to EFS File System map
-                  required:
-                  - storage_class_name
-                  - efs_arn
-                  properties:
-                    storage_class_name:
-                      type: string
-                      title: Storage Class Name
-                      description: Unique name for storage class resource for the EFS file system the EKS cluster
-                      "$ref": https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/k8s-resource-name.json
-                    efs_arn:
-                      type: string
-                      title: EFS File System ARN
-                      description: ARN of the EFS file system to map to this storage class in the EKS cluster
-                      pattern: "^arn:aws:elasticfilesystem:[a-z0-9-]*:(?:[0-9]{12})?:file-system\\/fs-(?:[a-z0-9]+)?$"
-                      message:
-                        pattern: Must be a valid AWS EFS file system ARN
     monitoring:
       type: object
       title: Monitoring
       required:
       - control_plane_log_retention
-      - prometheus
       properties:
         control_plane_log_retention:
           type: integer
@@ -299,40 +275,6 @@ params:
             const: 365
           - title: Never expire
             const: 0
-        prometheus:
-          type: object
-          title: Prometheus Configuration
-          description: Configuration settings for the Prometheus instances that are automatically installed into the cluster to provide monitoring capabilities"
-          required:
-          - persistence_enabled
-          - grafana_enabled
-          properties:
-            persistence_enabled:
-              title: Enable Persistence
-              type: boolean
-              description: This setting will enable persistence of Prometheus data via EBS volumes. However, in small clusters (less than 5 nodes) this can create problems of pod scheduling and placement due EBS volumes being zonally-locked, and thus should be disabled.
-              default: true
-            grafana_enabled:
-              title: Enable Grafana
-              type: boolean
-              description: Install Grafana into the cluster to provide a metric visualizer
-              default: false
-          dependencies:
-            grafana_enabled:
-              oneOf:
-              - properties:
-                  grafana_enabled:
-                    const: false
-              - properties:
-                  grafana_enabled:
-                    const: true
-                  grafana_password:
-                    title: Grafana Admin Password
-                    description: Set the password for the `admin` user
-                    type: string
-                    format: password
-                required:
-                - grafana_password
 
 connections:
   required:
@@ -356,7 +298,6 @@ ui:
   - k8s_version
   - fargate
   - node_groups
-  - core_services
   - monitoring
   - "*"
   k8s_version:
@@ -364,33 +305,12 @@ ui:
   node_groups:
     items:
       ui:order:
-      - name_suffix
+      - name
       - instance_type
       - min_size
       - max_size
       - "*"
-  core_services:
-    ui:order:
-    - enable_ingress
-    - route53_hosted_zones
-    - enable_efs_csi
-    - storage_class_to_efs_map
-    - "*"
-    route53_hosted_zones:
-      items:
-        ui:field: dnsZonesDropdown
-        cloud: aws
-    storage_class_to_efs_map:
-      items:
-        ui:order:
-        - storage_class_name
-        - efs_arn
   monitoring:
     ui:order:
     - control_plane_log_retention
-    - prometheus
-    prometheus:
-      ui:order:
-      - persistence_enabled
-      - grafana_enabled
-      - grafana_password
+    - "*"
