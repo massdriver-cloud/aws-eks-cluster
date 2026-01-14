@@ -23,7 +23,7 @@ Users can optionally install the ["official" Kubernetes NGINX ingress controller
 ### External-DNS and Cert-Manager
 If users associate one or more Route53 domains to their EKS cluster, this bundle will automatically install [external-dns](https://github.com/kubernetes-sigs/external-dns) and [cert-manager](https://cert-manager.io/docs/) in the cluster, allowing the cluster to automatically create and manage DNS records and TLS certificates for internet accessible workloads.
 ### EBS CSI Driver
-[Beginning in Kubernetes version 1.23, EKS no longer comes with the default EBS provisioner](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html#kubernetes-1.23). In order to allow users to continue using the default `gp2` storage class, this bundle includes the [EBS CSI Driver](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html), which replaces the deprecated EBS provisioner.
+[Beginning in Kubernetes version 1.23, EKS no longer comes with the default EBS provisioner](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html#kubernetes-1.23). This bundle includes the [EBS CSI Driver](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) as an AWS-managed addon. The cluster is configured with modern gp3 storage classes including a default gp3 class, a high-IOPS gp3 class, and an io2 class for demanding workloads.
 ### EFS CSI Driver
 Optionally, users can also install the [EFS CSI Driver](https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html) which will allow the EKS cluster to attach EFS volumes to cluster workloads for persistant storage. EFS volumes offer some benefits over EBS volumes, such as [allowing multiple pods to use the volume simultaneously (ReadWriteMany)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) and not being being locked to a single AWS availability zone, but these benefits come with higher storage costs and increased latency.
 
@@ -64,9 +64,11 @@ Worker nodes are provisioned into private subnets for security.
 ### IAM Roles for Service Accounts
 IRSA allows kubernetes pods to assume AWS IAM Roles, removing the need for static credentials to access AWS services.
 ### Secret Encryption
-An AWS KMS key is created and associated to the cluster to enable [encryption of secrets](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/) at rest.
+A customer-managed AWS KMS key is created and associated to the cluster to enable [encryption of secrets](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/) at rest in etcd.
+### EBS Volume Encryption
+EBS volumes attached to nodes use your AWS account's default encryption settings. If account-level EBS encryption is enabled, volumes will be encrypted with the AWS-managed key (`alias/aws/ebs`). To enable default encryption for your account, use: `aws ec2 enable-ebs-encryption-by-default`.
 ### IMDSv2 Required on Node Groups
-The [Instance Metadata Service version 2 (IMDSv2)]() is required on all EKS node groups. IMDSv1, which was the cause of the [2019 CapitalOne data breach](https://divvycloud.com/capital-one-data-breach-anniversary/), is disabled on all node groups.
+The [Instance Metadata Service version 2 (IMDSv2)]() is required on all EKS node groups with a hop limit of 2 to support IRSA and cloud controller functionality. IMDSv1, which was the cause of the [2019 CapitalOne data breach](https://divvycloud.com/capital-one-data-breach-anniversary/), is disabled on all node groups.
 
 ## Connecting
 After you have deployed a Kubernetes cluster through Massdriver, you may want to interact with the cluster using the powerful [kubectl](https://kubernetes.io/docs/reference/kubectl/) command line tool.
@@ -217,6 +219,12 @@ By utilizing these runbook commands and tools, you can troubleshoot and manage y
 
 ## AWS Access
 
-If you would like to manage access your EKS cluster through AWS IAM principals, you can do so via the `aws-auth` ConfigMap. This will allow the desired AWS IAM principals to view cluster status in the AWS console, as well as generate short-lived credentials for `kubectl` access. Refer to the [AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) for more details.
+This cluster uses the **API_AND_CONFIG_MAP** authentication mode, which supports both the legacy `aws-auth` ConfigMap and the modern [EKS Access Entries API](https://docs.aws.amazon.com/eks/latest/userguide/access-entries.html). This provides flexibility during the transition from ConfigMap-based to API-based access management.
+
+You can manage access through:
+- **EKS Access Entries** (recommended): Use the AWS API or console to grant IAM principals access
+- **aws-auth ConfigMap** (legacy): Manually edit the ConfigMap in the `kube-system` namespace
+
+Refer to the [AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/grant-k8s-access.html) for more details on managing cluster access.
 
 **Note**: In order to connect to the EKS cluster to view or modify the `aws-auth` ConfigMap, you'll need to download the `kubeconfig` file and use `kubectl` as discussed earlier.
