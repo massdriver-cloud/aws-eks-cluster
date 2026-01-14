@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "kms_key" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:${data.aws_partition.current.id}:iam::${data.aws_caller_identity.current.account_id}:root"
+        "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"
       ]
     }
 
@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "kms_key" {
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-      values   = ["eks.${var.vpc.specs.aws.region}.amazonaws.com"]
+      values   = ["eks.${data.aws_region.current.name}.amazonaws.com"]
     }
   }
 
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "kms_key" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:${data.aws_partition.current.id}:iam::${data.aws_caller_identity.current.account_id}:root"
+        "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"
       ]
     }
   }
@@ -118,7 +118,28 @@ data "aws_iam_policy_document" "kms_key" {
 
     principals {
       type        = "Service"
-      identifiers = ["logs.${var.vpc.specs.aws.region}.amazonaws.com"]
+      identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
+    }
+  }
+
+  # Add permissions for Auto Scaling to use the key for encrypted EBS volumes
+  statement {
+    sid = "Allow Auto Scaling to use the key"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:CreateGrant",
+      "kms:DescribeKey"
+    ]
+    resources = ["*"]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "autoscaling.amazonaws.com"
+      ]
     }
   }
 }
