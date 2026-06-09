@@ -121,25 +121,4 @@ data "aws_iam_policy_document" "kms_key" {
       identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
     }
   }
-
-  # Add permissions for Auto Scaling to use the key for encrypted EBS volumes
-  statement {
-    sid = "Allow Auto Scaling to use the key"
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:CreateGrant",
-      "kms:DescribeKey"
-    ]
-    resources = ["*"]
-
-    principals {
-      type = "Service"
-      identifiers = [
-        "autoscaling.amazonaws.com"
-      ]
-    }
-  }
 }

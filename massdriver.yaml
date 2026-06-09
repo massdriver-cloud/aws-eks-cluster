@@ -282,16 +282,16 @@ connections:
   - vpc
   properties:
     aws_authentication:
-      "$ref": massdriver/aws-iam-role
+      "$ref": aws-iam-role
     vpc:
-      "$ref": massdriver/aws-vpc
+      "$ref": aws-vpc
 
 artifacts:
   required:
   - kubernetes_cluster
   properties:
     kubernetes_cluster:
-      "$ref": massdriver/kubernetes-cluster
+      "$ref": kubernetes-cluster
 
 ui:
   ui:order:
