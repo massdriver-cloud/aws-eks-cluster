@@ -11,11 +11,11 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.0"
+      version = "~> 3.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.0"
+      version = "~> 3.0"
     }
   }
 }
@@ -35,8 +35,8 @@ data "aws_arn" "cluster" {
 provider "aws" {
   region = var.vpc.specs.aws.region
   assume_role {
-    role_arn    = var.aws_authentication.data.arn
-    external_id = var.aws_authentication.data.external_id
+    role_arn    = var.aws_authentication.arn
+    external_id = var.aws_authentication.external_id
   }
   default_tags {
     tags = var.md_metadata.default_tags
@@ -50,7 +50,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = data.aws_eks_cluster.cluster.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.auth.token
