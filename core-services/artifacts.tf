@@ -2,7 +2,7 @@ locals {
   cacert_base64   = data.aws_eks_cluster.cluster.certificate_authority[0].data
   oidc_issuer_url = data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 
-  data_authentication = {
+  authentication = {
     cluster = {
       server                     = data.aws_eks_cluster.cluster.endpoint
       certificate-authority-data = local.cacert_base64
@@ -12,7 +12,7 @@ locals {
       token = lookup(kubernetes_secret_v1.massdriver_access_token.data, "token")
     }
   }
-  data_infrastructure = {
+  infrastructure = {
     arn             = data.aws_eks_cluster.cluster.arn
     oidc_issuer_url = local.oidc_issuer_url
   }
@@ -27,10 +27,8 @@ locals {
   }
 
   kubernetes_cluster_artifact = {
-    data = {
-      infrastructure = local.data_infrastructure
-      authentication = local.data_authentication
-    }
+    infrastructure = local.infrastructure
+    authentication = local.authentication
     specs = {
       kubernetes = local.specs_kubernetes
       aws        = local.specs_aws
