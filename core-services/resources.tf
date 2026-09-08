@@ -26,7 +26,7 @@ locals {
     region = var.vpc.specs.aws.region
   }
 
-  kubernetes_cluster_artifact = {
+  kubernetes_cluster_resource = {
     infrastructure = local.infrastructure
     authentication = local.authentication
     specs = {
@@ -36,8 +36,8 @@ locals {
   }
 }
 
-resource "massdriver_artifact" "kubernetes_cluster" {
+resource "massdriver_resource" "kubernetes_cluster" {
   field    = "kubernetes_cluster"
   name     = "EKS Cluster Credentials ${data.aws_eks_cluster.cluster.name} [${var.vpc.specs.aws.region}]"
-  artifact = jsonencode(local.kubernetes_cluster_artifact)
+  resource = jsonencode(local.kubernetes_cluster_resource)
 }

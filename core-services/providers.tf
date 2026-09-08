@@ -3,7 +3,7 @@ terraform {
   required_providers {
     massdriver = {
       source  = "massdriver-cloud/massdriver"
-      version = "~> 1.0"
+      version = "~> 2.0"
     }
     aws = {
       source  = "hashicorp/aws"
