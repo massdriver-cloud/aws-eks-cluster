@@ -101,7 +101,6 @@ resource "aws_eks_node_group" "node_group" {
   ]
 }
 
-#checkov:skip=CKV_AWS_341:EKS requires hop limit of 2 for IRSA and cloud controller functionality
 resource "aws_launch_template" "nodes" {
   for_each = { for ng in var.node_groups : ng.name => ng }
   name     = "${local.cluster_name}-${each.value.name}"
@@ -111,9 +110,8 @@ resource "aws_launch_template" "nodes" {
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
-    // Hop limit must be 2 for pods to access IMDS for IRSA and cloud controller functionality
-    // AL2023 + IMDSv2 requires hop limit of 2 for container networking to work properly
-    http_put_response_hop_limit = 2
+    // Block IMDS from pods that aren't on the host network, so they can't use the node role's credentials
+    http_put_response_hop_limit = 1
     instance_metadata_tags      = "enabled"
   }
 
