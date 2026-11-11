@@ -1,6 +1,6 @@
 schema: draft-07
 name: aws-eks-cluster
-version: 2.0.3
+version: 2.0.4
 description: Elastic Kubernetes Service is an open source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.
 source_url: https://github.com/massdriver-cloud/aws-eks-cluster
 
@@ -175,6 +175,36 @@ params:
               const: c5.18xlarge
             - title: C5 High-CPU 24XL (96 vCPUs, 192.0 GiB)
               const: c5.24xlarge
+            - title: C8g Graviton High-CPU Large (2 vCPUs, 4.0 GiB, ARM64)
+              const: c8g.large
+            - title: C8g Graviton High-CPU XL (4 vCPUs, 8.0 GiB, ARM64)
+              const: c8g.xlarge
+            - title: C8g Graviton High-CPU 2XL (8 vCPUs, 16.0 GiB, ARM64)
+              const: c8g.2xlarge
+            - title: C8g Graviton High-CPU 4XL (16 vCPUs, 32.0 GiB, ARM64)
+              const: c8g.4xlarge
+            - title: C8g Graviton High-CPU 8XL (32 vCPUs, 64.0 GiB, ARM64)
+              const: c8g.8xlarge
+            - title: C7g Graviton High-CPU Large (2 vCPUs, 4.0 GiB, ARM64)
+              const: c7g.large
+            - title: C7g Graviton High-CPU XL (4 vCPUs, 8.0 GiB, ARM64)
+              const: c7g.xlarge
+            - title: C7g Graviton High-CPU 2XL (8 vCPUs, 16.0 GiB, ARM64)
+              const: c7g.2xlarge
+            - title: C7g Graviton High-CPU 4XL (16 vCPUs, 32.0 GiB, ARM64)
+              const: c7g.4xlarge
+            - title: C7g Graviton High-CPU 8XL (32 vCPUs, 64.0 GiB, ARM64)
+              const: c7g.8xlarge
+            - title: C6g Graviton High-CPU Large (2 vCPUs, 4.0 GiB, ARM64)
+              const: c6g.large
+            - title: C6g Graviton High-CPU XL (4 vCPUs, 8.0 GiB, ARM64)
+              const: c6g.xlarge
+            - title: C6g Graviton High-CPU 2XL (8 vCPUs, 16.0 GiB, ARM64)
+              const: c6g.2xlarge
+            - title: C6g Graviton High-CPU 4XL (16 vCPUs, 32.0 GiB, ARM64)
+              const: c6g.4xlarge
+            - title: C6g Graviton High-CPU 8XL (32 vCPUs, 64.0 GiB, ARM64)
+              const: c6g.8xlarge
             - title: M7i General Purpose Large (2 vCPUs, 8.0 GiB)
               const: m7i.large
             - title: M7i General Purpose XL (4 vCPUs, 16.0 GiB)
@@ -211,6 +241,36 @@ params:
               const: m5.16xlarge
             - title: M5 General Purpose 24XL (96 vCPUs, 384.0 GiB)
               const: m5.24xlarge
+            - title: M8g Graviton General Purpose Large (2 vCPUs, 8.0 GiB, ARM64)
+              const: m8g.large
+            - title: M8g Graviton General Purpose XL (4 vCPUs, 16.0 GiB, ARM64)
+              const: m8g.xlarge
+            - title: M8g Graviton General Purpose 2XL (8 vCPUs, 32.0 GiB, ARM64)
+              const: m8g.2xlarge
+            - title: M8g Graviton General Purpose 4XL (16 vCPUs, 64.0 GiB, ARM64)
+              const: m8g.4xlarge
+            - title: M8g Graviton General Purpose 8XL (32 vCPUs, 128.0 GiB, ARM64)
+              const: m8g.8xlarge
+            - title: M7g Graviton General Purpose Large (2 vCPUs, 8.0 GiB, ARM64)
+              const: m7g.large
+            - title: M7g Graviton General Purpose XL (4 vCPUs, 16.0 GiB, ARM64)
+              const: m7g.xlarge
+            - title: M7g Graviton General Purpose 2XL (8 vCPUs, 32.0 GiB, ARM64)
+              const: m7g.2xlarge
+            - title: M7g Graviton General Purpose 4XL (16 vCPUs, 64.0 GiB, ARM64)
+              const: m7g.4xlarge
+            - title: M7g Graviton General Purpose 8XL (32 vCPUs, 128.0 GiB, ARM64)
+              const: m7g.8xlarge
+            - title: M6g Graviton General Purpose Large (2 vCPUs, 8.0 GiB, ARM64)
+              const: m6g.large
+            - title: M6g Graviton General Purpose XL (4 vCPUs, 16.0 GiB, ARM64)
+              const: m6g.xlarge
+            - title: M6g Graviton General Purpose 2XL (8 vCPUs, 32.0 GiB, ARM64)
+              const: m6g.2xlarge
+            - title: M6g Graviton General Purpose 4XL (16 vCPUs, 64.0 GiB, ARM64)
+              const: m6g.4xlarge
+            - title: M6g Graviton General Purpose 8XL (32 vCPUs, 128.0 GiB, ARM64)
+              const: m6g.8xlarge
             - title: R7i Memory Optimized Large (2 vCPUs, 16.0 GiB)
               const: r7i.large
             - title: R7i Memory Optimized XL (4 vCPUs, 32.0 GiB)
@@ -227,6 +287,30 @@ params:
               const: r6i.2xlarge
             - title: R6i Memory Optimized 4XL (16 vCPUs, 128.0 GiB)
               const: r6i.4xlarge
+            - title: R8g Graviton Memory Optimized Large (2 vCPUs, 16.0 GiB, ARM64)
+              const: r8g.large
+            - title: R8g Graviton Memory Optimized XL (4 vCPUs, 32.0 GiB, ARM64)
+              const: r8g.xlarge
+            - title: R8g Graviton Memory Optimized 2XL (8 vCPUs, 64.0 GiB, ARM64)
+              const: r8g.2xlarge
+            - title: R8g Graviton Memory Optimized 4XL (16 vCPUs, 128.0 GiB, ARM64)
+              const: r8g.4xlarge
+            - title: R7g Graviton Memory Optimized Large (2 vCPUs, 16.0 GiB, ARM64)
+              const: r7g.large
+            - title: R7g Graviton Memory Optimized XL (4 vCPUs, 32.0 GiB, ARM64)
+              const: r7g.xlarge
+            - title: R7g Graviton Memory Optimized 2XL (8 vCPUs, 64.0 GiB, ARM64)
+              const: r7g.2xlarge
+            - title: R7g Graviton Memory Optimized 4XL (16 vCPUs, 128.0 GiB, ARM64)
+              const: r7g.4xlarge
+            - title: R6g Graviton Memory Optimized Large (2 vCPUs, 16.0 GiB, ARM64)
+              const: r6g.large
+            - title: R6g Graviton Memory Optimized XL (4 vCPUs, 32.0 GiB, ARM64)
+              const: r6g.xlarge
+            - title: R6g Graviton Memory Optimized 2XL (8 vCPUs, 64.0 GiB, ARM64)
+              const: r6g.2xlarge
+            - title: R6g Graviton Memory Optimized 4XL (16 vCPUs, 128.0 GiB, ARM64)
+              const: r6g.4xlarge
             - title: T3 Small (2 vCPUs for a 4h 48m burst, 2.0 GiB)
               const: t3.small
             - title: T3 Medium (2 vCPUs for a 4h 48m burst, 4.0 GiB)
@@ -237,6 +321,16 @@ params:
               const: t3.xlarge
             - title: T3 2XL (8 vCPUs for a 9h 36m burst, 32.0 GiB)
               const: t3.2xlarge
+            - title: T4g Graviton Small (2 vCPUs burstable, 2.0 GiB, ARM64)
+              const: t4g.small
+            - title: T4g Graviton Medium (2 vCPUs burstable, 4.0 GiB, ARM64)
+              const: t4g.medium
+            - title: T4g Graviton Large (2 vCPUs burstable, 8.0 GiB, ARM64)
+              const: t4g.large
+            - title: T4g Graviton XL (4 vCPUs burstable, 16.0 GiB, ARM64)
+              const: t4g.xlarge
+            - title: T4g Graviton 2XL (8 vCPUs burstable, 32.0 GiB, ARM64)
+              const: t4g.2xlarge
           advanced_configuration_enabled:
             type: boolean
             title: Advanced Configuration Enabled

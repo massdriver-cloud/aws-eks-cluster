@@ -5,6 +5,9 @@ locals {
   subnet_ids         = concat(local.public_subnet_ids, local.private_subnet_ids)
 
   cluster_name = var.md_metadata.name_prefix
+
+  // Graviton instance families have a "g" after the generation number (c7g, m6gd, t4g, etc.)
+  node_group_ami_types = { for ng in var.node_groups : ng.name => can(regex("^[a-z]+[0-9]+g[a-z]*\\.", ng.instance_type)) ? "AL2023_ARM_64_STANDARD" : "AL2023_x86_64_STANDARD" }
 }
 
 resource "aws_eks_cluster" "cluster" {
@@ -23,7 +26,7 @@ resource "aws_eks_cluster" "cluster" {
     provider {
       key_arn = module.kms.key_arn
     }
-        resources = ["secrets"]
+    resources = ["secrets"]
   }
 
   vpc_config {
@@ -59,7 +62,7 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = local.private_subnet_ids
   node_role_arn   = aws_iam_role.node.arn
   instance_types  = [each.value.instance_type]
-  ami_type        = "AL2023_x86_64_STANDARD"
+  ami_type        = local.node_group_ami_types[each.key]
 
   launch_template {
     id      = aws_launch_template.nodes[each.key].id
